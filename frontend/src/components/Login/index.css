@@ -1,0 +1,48 @@
+.login-form {
+  max-width: 300px;
+  margin: auto;
+  margin-top: 20vh;
+  max-height: 100%;
+  padding-bottom: 35vh;
+}
+
+.login-form-forgot {
+  float: right;
+}
+.login-form-button {
+  width: 100%;
+}
+
+.btn-group-login {
+  margin-top: 1.5vh;
+}
+
+.btnReg {
+  border-radius: 0px;
+  background: none !important;
+  color: inherit;
+  border: none;
+  padding: 0 !important;
+  font: inherit;
+  /*border is optional*/
+
+  cursor: pointer;
+}
+
+.regForm {
+  margin-top: 1vh;
+  overflow-y: scroll;
+  height: 400px;
+  padding-right: 3vh;
+}
+.forgForm {
+  margin-top: 1vh;
+}
+
+.btnRegForm {
+  text-align: center;
+}
+
+.modalReg {
+  overflow-y: initial !important;
+}

@@ -1,0 +1,92 @@
+{
+  "_default": {
+    "1": {
+      "000034": {
+        "walletAddr": "ssssss",
+        "fullName": "negssssros",
+        "coopName": "prinssssce",
+        "username": "psssrincess",
+        "password": "pssssrincess123"
+      }
+    },
+    "2": {
+      "000034": {
+        "walletAddr": "ssssss",
+        "fullName": "negssssros",
+        "coopName": "prinssssce",
+        "username": "psssrincess",
+        "password": "pssssrincess123"
+      }
+    },
+    "3": {
+      "7016a30fa2f297b437d4d4613d331a81": {
+        "walletAddr": "acrua123",
+        "fullName": "Nereo",
+        "coopName": "Jaro Cooperative",
+        "username": "Luminous13",
+        "password": "acrua123"
+      }
+    },
+    "4": {
+      "id": "3863744280267ef935728566ad665a42",
+      "walletAddr": "acrua123",
+      "fullName": "Nereo",
+      "coopName": "Jaro Cooperative",
+      "username": "Luminous13",
+      "password": "acrua123"
+    },
+    "5": {
+      "cf6dd5845e1835a82dddf10e08a2eba6": {
+        "walletAddr": "ralph123b",
+        "fullName": "ralph",
+        "coopName": "jaro",
+        "username": "ralph",
+        "password": "ralph123b"
+      }
+    },
+    "6": {
+      "e5edd0040d3c552e644a76c7f859e619": {
+        "walletAddr": "ralph123b",
+        "fullName": "ralph",
+        "coopName": "jaro",
+        "username": "ralph",
+        "password": "ralph123b"
+      }
+    },
+    "7": {
+      "8cc803bbcd2780d4292e49a1dfdbf073": {
+        "walletAddr": "",
+        "fullName": "",
+        "coopName": "",
+        "username": "",
+        "password": ""
+      }
+    },
+    "8": {
+      "740d78f0062e6b3ac91637b866c13a66": {
+        "walletAddr": "april123",
+        "fullName": "april",
+        "coopName": "pavia",
+        "username": "april",
+        "password": "april123"
+      }
+    },
+    "9": {
+      "52b746e09f0302aff8556e50b24a1573": {
+        "walletAddr": "chase123",
+        "fullName": "chase",
+        "coopName": "antique",
+        "username": "chase",
+        "password": "chase123"
+      }
+    },
+    "10": {
+      "id": "2fe0eea199342f224ae5ff676eb7e1a4",
+      "walletAddr": "jef123",
+      "fullName": "jeferd",
+      "coopName": "aklan",
+      "username": "jeff",
+      "password": "jef123"
+    }
+  }
+}
