@@ -24,6 +24,7 @@
   border: none;
   padding: 0 !important;
   font: inherit;
+  margin-left: 2px;
   /*border is optional*/
 
   cursor: pointer;
