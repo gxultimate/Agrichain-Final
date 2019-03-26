@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Prop } from "react";
 import { Input, Button, Card, Container, Row } from "antd";
 import { inject, observer } from "mobx-react";
 

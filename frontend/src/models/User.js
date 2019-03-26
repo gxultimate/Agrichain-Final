@@ -7,9 +7,9 @@ class User extends Model {
       _id: 0,
       fullName: "",
       coopName: "",
-      username: "",
-      password: "",
-      rpassword: "",
+      userName: "",
+      passWord: "",
+      rpassWord: "",
       currAddress: "",
       contactNum: 0
     };
@@ -20,9 +20,9 @@ decorate(User, {
   _id: observable,
   fullName: observable,
   coopName: observable,
-  username: observable,
-  password: observable,
-  rpassword: observable,
+  userName: observable,
+  passWord: observable,
+  rpassWord: observable,
   currAddress: observable,
   contactNum: observable,
   reset: action
