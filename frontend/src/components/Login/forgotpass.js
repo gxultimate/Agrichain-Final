@@ -50,6 +50,10 @@ class ForgotForm extends Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
+    const authenticate = () => {
+      const hide = message.loading("Changing Password...", 0);
+      setTimeout(hide, 2500);
+    };
     let {
       userStore: { user, forgotPasswordUser }
     } = this.props;
@@ -79,8 +83,8 @@ class ForgotForm extends Component {
     return (
       <Container>
         <Modal
-          visible={this.state.forgotmodalIsOpen}
-          onCancel={this.toggleForgotPassModal.bind(this)}
+          visible={this.props.toggleModal}
+          onCancel={this.props.onCancel}
           title="Change Password"
           footer={(null, null)}
           size="md"
@@ -88,41 +92,41 @@ class ForgotForm extends Component {
           {" "}
           <div className="forgForm">
             <Form {...formItemLayout}>
-              <Form.Item label="* Username">
-                {getFieldDecorator("username", {
+              <Form.Item label=" Username">
+                {getFieldDecorator("userName", {
                   rules: [{ required: true, message: "username is required" }]
                 })(
                   <Input
-                    name="username"
+                    name="userName"
                     type="text"
-                    onChange={username =>
-                      user.setProperty("username", username.target.value)
+                    onChange={userName =>
+                      user.setProperty("userName", userName.target.value)
                     }
                   />
                 )}
               </Form.Item>
-              <Form.Item label="* Password">
-                {getFieldDecorator("password", {
+              <Form.Item label=" Password">
+                {getFieldDecorator("passWord", {
                   rules: [{ required: true, message: "password is required" }]
                 })(
                   <Input
-                    name="password"
+                    name="passWord"
                     type="password"
-                    onChange={password =>
-                      user.setProperty("password", password.target.value)
+                    onChange={passWord =>
+                      user.setProperty("passWord", passWord.target.value)
                     }
                   />
                 )}
               </Form.Item>
-              <Form.Item label="* Repeat Password">
-                {getFieldDecorator("rpassword", {
-                  rules: [{ required: true, message: "rpassword is required" }]
+              <Form.Item label=" Repeat Password">
+                {getFieldDecorator("rpassWord", {
+                  rules: [{ required: true, message: "please repeat password" }]
                 })(
                   <Input
-                    name="rpassword"
+                    name="rpassWord"
                     type="password"
-                    onChange={rpassword =>
-                      user.setProperty("rpassword", rpassword.target.value)
+                    onChange={rpassWord =>
+                      user.setProperty("rpassWord", rpassWord.target.value)
                     }
                   />
                 )}
@@ -131,8 +135,11 @@ class ForgotForm extends Component {
                 <Button
                   type="primary"
                   className="login-form-button btnRegForm"
-                  size="md"
-                  onClick={forgotPasswordUser}
+                  size="default"
+                  onClick={() => {
+                    forgotPasswordUser();
+                    authenticate();
+                  }}
                 >
                   Submit
                 </Button>

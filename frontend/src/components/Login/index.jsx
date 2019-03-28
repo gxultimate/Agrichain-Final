@@ -18,11 +18,6 @@ import {
 //
 import WrapLogin from "./login";
 
-message.config({
-  top: 100,
-  duration: 2
-});
-
 class Login extends Component {
   render() {
     return (
