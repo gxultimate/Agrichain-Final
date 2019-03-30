@@ -11,7 +11,8 @@ class User extends Model {
       passWord: "",
       rpassWord: "",
       currAddress: "",
-      contactNum: 0
+      contactNum: 0,
+      response: ""
     };
     super({ ...defaults, ...props });
   }
@@ -25,6 +26,7 @@ decorate(User, {
   rpassWord: observable,
   currAddress: observable,
   contactNum: observable,
+  response: observable,
   reset: action
 });
 

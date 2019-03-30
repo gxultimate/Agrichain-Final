@@ -55,7 +55,7 @@ class ForgotForm extends Component {
       setTimeout(hide, 2500);
     };
     let {
-      userStore: { user, forgotPasswordUser }
+      userStore: { user, forgotPasswordUser, checkName }
     } = this.props;
 
     const formItemLayout = {

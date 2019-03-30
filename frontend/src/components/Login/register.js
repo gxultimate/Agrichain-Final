@@ -14,6 +14,7 @@ import {
   Modal,
   message
 } from "antd";
+import { get } from "http";
 
 message.config({
   top: 150,
@@ -40,7 +41,7 @@ class RegisterForm extends Component {
     };
 
     let {
-      userStore: { getUserData, postData, user, registerUser }
+      userStore: { checkName, postData, user, registerUser }
     } = this.props;
 
     let { getFieldDecorator } = this.props.form;
@@ -189,8 +190,8 @@ class RegisterForm extends Component {
                   className="login-form-button btnRegForm"
                   size="large"
                   onClick={() => {
+                    checkName();
                     registerUser();
-                    authenticate();
                   }}
                 >
                   Register

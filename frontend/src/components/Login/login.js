@@ -12,31 +12,48 @@ import {
   Checkbox,
   Input,
   Modal,
-  message
+  Spin,
+  notification
 } from "antd";
 import WrapRegister from "./register";
 import WrapForgot from "./forgotpass";
 
-message.config({
-  top: 150,
-  duration: 2
-});
+const antIcon = (
+  <Icon type="loading" style={{ fontSize: 24, color: "white" }} spin />
+);
+
+// const {
+//   FormWithConstraints,
+//   FieldFeedbacks,
+//   FieldFeedback
+// } = ReactFormWithConstraints;
 
 class LoginForm extends Component {
   constructor(props) {
     super(props);
-    this.handleWallet = this.handleWallet.bind(this);
+    // this.handleWallet = this.handleWallet.bind(this);
   }
   state = {
     visible: false,
-    display: false
+    display: false,
+    redirect: false
   };
 
-  handleWallet(event) {
-    const msg = message.loading("wow", 100);
-    setTimeout(msg, 2500);
-    this.props.history.push("/wallet");
-  }
+  // handleChange = e => {
+  //   this.form.validateFields(e.target);
+  // };
+
+  // contactSubmit = e => {
+  //   e.preventDefaault();
+  // this.form.validateFields();
+  // if (!this.form.isValid()){
+  //   console.log("form is invalid")
+  // }
+  // else{
+  //   console.log(form)
+  // }
+
+  // };
 
   toggleModalReg() {
     this.setState({
@@ -50,54 +67,84 @@ class LoginForm extends Component {
     });
   }
 
-  render() {
-    const authenticate = () => {
-      const hide = message.loading("Logging In...", 0);
-      setTimeout(hide, 2500);
-    };
-    let { getFieldDecorator } = this.props.form;
+  handleLogin = () => {
     let {
-      userStore: { currentUser, loginUser }
+      userStore: { loginUser }
     } = this.props;
+
+    loginUser().then(res => {
+      if (res) {
+        notification["success"]({
+          message: "Welcome Back User!",
+          description: "",
+          duration: 2,
+          onClick: () => {
+            console.log("Notification Clicked!");
+          }
+        });
+        return this.props.history.push("/wallet");
+      } else {
+        notification["error"]({
+          message: "Login Error",
+          description: "username or password was invalid",
+          duration: 2,
+          onClick: () => {
+            console.log("Notification Clicked!");
+          }
+        });
+        return this.props.history.push("/");
+      }
+    });
+  };
+
+  render() {
+    // let { getFieldDecorator } = this.props.form;
+    let {
+      userStore: { currentUser, isLoading, loginUser, resp, isLoggedIn }
+    } = this.props;
+
+    const handleWallet = () => {};
+
     return (
-      <div>
-        <div>
+      <Layout>
+        <Layout>
           <WrapRegister
             toggleModal={this.state.visible}
             onCancel={this.toggleModalReg.bind(this)}
           />
-        </div>
-        <div>
+        </Layout>
+        <Layout>
           <WrapForgot
             toggleModal={this.state.display}
             onCancel={this.toggleForgotPassModal.bind(this)}
           />
-        </div>
+        </Layout>
 
         <Layout>
           <Layout.Content>
             <Form className="login-form" id="login-form">
               <Form.Item>
-                {getFieldDecorator("userName", {
+                {/* {getFieldDecorator("userName", {
                   rules: [
                     { required: true, message: "please input your username" }
                   ]
                 })(
-                  <Input
-                    size="large"
-                    prefix={
-                      <Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />
-                    }
-                    placeholder="Username"
-                    onKeyPress={userName =>
-                      currentUser.setProperty("userName", userName.target.value)
-                    }
-                    pattern="[a-z][a-zA-Z0-9-_\.]{1,15}$"
-                  />
-                )}
+            
+                )} */}
+                <Input
+                  size="large"
+                  prefix={
+                    <Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />
+                  }
+                  placeholder="Username"
+                  onChange={userName =>
+                    currentUser.setProperty("userName", userName.target.value)
+                  }
+                  pattern="[a-z][a-zA-Z0-9-_\.]{1,15}$"
+                />
               </Form.Item>
               <Form.Item>
-                {getFieldDecorator("password", {
+                {/* {getFieldDecorator("password", {
                   rules: [
                     {
                       required: true,
@@ -105,20 +152,21 @@ class LoginForm extends Component {
                     }
                   ]
                 })(
-                  <Input
-                    size="large"
-                    prefix={
-                      <Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />
-                    }
-                    type="password"
-                    placeholder="Password"
-                    onChange={passWord =>
-                      currentUser.setProperty("passWord", passWord.target.value)
-                    }
-                    pattern="[a-z][a-zA-Z0-9-_\.]{1,15}$"
-                    required
-                  />
-                )}
+                 
+                )} */}
+                <Input
+                  size="large"
+                  prefix={
+                    <Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />
+                  }
+                  type="password"
+                  placeholder="Password"
+                  onChange={passWord =>
+                    currentUser.setProperty("passWord", passWord.target.value)
+                  }
+                  pattern="[a-z][a-zA-Z0-9-_\.]{1,15}$"
+                  required
+                />
               </Form.Item>
               <Form.Item>
                 <Checkbox>Remember me</Checkbox>
@@ -135,12 +183,13 @@ class LoginForm extends Component {
                     className="login-form-button"
                     size="large"
                     onClick={() => {
-                      loginUser();
-                      authenticate();
-                      this.handleWallet();
+                      this.handleLogin();
+                      // authenticate();
+                      // handleWallet();
+                      // console.log(currentUser);
                     }}
                   >
-                    Log in
+                    {isLoading ? <Spin indicator={antIcon} /> : "Log in"}
                   </Button>
                   Or
                   <Button
@@ -155,11 +204,12 @@ class LoginForm extends Component {
             </Form>
           </Layout.Content>
         </Layout>
-      </div>
+      </Layout>
     );
   }
 }
 
-const WrapLogin = Form.create()(LoginForm);
+// const WrapLogin = Form.create()(LoginForm);
 
-export default withRouter(inject("userStore")(observer(WrapLogin)));
+// export default withRouter(inject("userStore")(observer(WrapLogin)));
+export default withRouter(inject("userStore")(observer(LoginForm)));

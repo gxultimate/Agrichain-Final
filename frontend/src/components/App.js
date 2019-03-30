@@ -10,15 +10,17 @@ import Wallet from "./Wallet";
 
 // Store Init
 
-import { UserStore, Api } from "../stores";
+import { UserStore, Api, NavigateStore } from "../stores";
 import { Layout } from "antd";
 
 const api = new Api();
-const userStore = new UserStore(api);
+const nav = new NavigateStore();
+const userStore = new UserStore(api, nav);
 
 const stores = {
   userStore
 };
+// const { Header, Content, Footer, Sider } = Layout;
 
 class App extends Component {
   render() {

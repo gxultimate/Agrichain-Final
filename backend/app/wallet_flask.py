@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify, json
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 import flask_bootstrap
 from flask_cors import CORS, cross_origin
+
 from ecdsa import SigningKey, SECP256k1
 import sha3
 import qrcode
@@ -42,15 +43,35 @@ def getName():
 
 
 @app.route('/login', methods=['POST', 'GET'])
+@cross_origin()
 def login():
 
     data = request.data
     parsed = json.loads(data.decode())
     parsedBody = parsed['body']
-    parseUsername = parsedBody['username']
-    parsePassword = parsedBody['password']
-    user = User()
-    return user.checkUser(parseUsername, parsePassword)
+    try:
+        user = User()
+        return user.checkUser(parsedBody['userName'], parsedBody['passWord'])
+
+    except ValueError:
+        return('failed')
+
+
+@app.route('/checkname', methods=['POST', 'GET'])
+@cross_origin()
+def checkname():
+
+    data = request.data
+    parsed = json.loads(data.decode())
+    parsedBody = parsed['body']
+    parsedFullname = parsedBody['fullName']
+
+    try:
+        user = User()
+        return user.checkName(parsedFullname)
+
+    except ValueError:
+        return jsonify({status: 'failed'})
 
 
 @app.route('/register', methods=['POST', 'GET'])
@@ -59,33 +80,40 @@ def register():
 
     data = request.data
     parsed = json.loads(data.decode())
+    parsedBody = parsed['body']
+    parsedFullname = parsedBody['fullName']
+    parsedCoopname = parsedBody['coopName']
+    parsedCurraddress = parsedBody['currAddress']
+    parsedContactnum = parsedBody['contactNum']
+    parsedUsername = parsedBody['userName']
+    parsedPassword = parsedBody['passWord']
+    parsedRpassword = parsedBody['rpassWord']
 
-    user = User()
-    return user.addUser(parsed['body'])
+    try:
+        user = User()
+        return user.addUser(parsedFullname, parsedCoopname, parsedCurraddress, parsedContactnum, parsedUsername, parsedPassword, parsedRpassword)
+    except ValueError:
+        return jsonify({status: 'failed'})
 
 
 @app.route('/forgotPass', methods=['POST', 'GET'])
+@cross_origin()
 def changePass():
 
     data = request.data
     parsed = json.loads(data.decode())
     parsedBody = parsed['body']
-    parsedUsername = parsedBody['username']
-    parsedPassword = parsedBody['password']
 
-    user = User()
-
-    return user.changePassword(parsedUsername, parsedPassword)
+    try:
+        user = User()
+        return user.changePassword(parsedBody['userName'], parsedBody['passWord'])
+    except ValueError:
+        return jsonify({status: 'failed'})
 
 
 @app.route('/wallet')
 def wallet():
     return render_template('wallet_interface.html')
-
-
-@app.route('/sample')
-def sample():
-    return render_template('sample.html')
 
 
 @app.route('/generateWallet', methods=['POST', 'GET'])

@@ -1,12 +1,11 @@
 import axios from "axios";
-import { action, decorate } from "mobx";
+import { action, decorate, observable } from "mobx";
 import User from "../models/User";
+
 class Api {
   api = axios.create({
     baseURL: "http://localhost:5000/"
   });
-
-  user = new User();
 
   register = data => {
     this.api
@@ -22,18 +21,19 @@ class Api {
       });
   };
 
-  login = data => {
-    this.api
-      .post("login", {
-        mode: "cors",
-        body: data
-      })
-      .then(response => {
-        console.log(response.data);
-      })
-      .catch(error => {
-        console.log(error);
-      });
+  login = async data => {
+    return this.api.post("login", {
+      mode: "cors",
+      body: data
+    });
+    // .then(response => {
+    // this.user.setProperty("response", response.data);
+    // console.log(this.user);
+    //   return response;
+    // })
+    // .catch(error => {
+    //   return error;
+    // });
   };
   forgotPass = data => {
     this.api
@@ -48,11 +48,27 @@ class Api {
         console.log(error);
       });
   };
+  checkUser = data => {
+    this.api
+      .post("checkname", {
+        mode: "cors",
+        body: data
+      })
+      .then(response => {
+        console.log(response.data);
+      })
+
+      .catch(err => {
+        console.log(err);
+      });
+  };
 }
 
 decorate(Api, {
-  getUsers: action,
-  getRegister: action
+  login: action,
+  forgotPass: action,
+  register: action,
+  user: observable
 });
 
 export default Api;
