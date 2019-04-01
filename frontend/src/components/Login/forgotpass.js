@@ -1,18 +1,7 @@
 import React, { Component } from "react";
-import { Container, FormGroup } from "reactstrap";
+import { Container } from "reactstrap";
 import { inject, observer } from "mobx-react";
-import {
-  Layout,
-  Form,
-  Icon,
-  Button,
-  Checkbox,
-  Input,
-  Modal,
-  Label,
-  Alert,
-  message
-} from "antd";
+import { Form, Button, Input, Modal, message } from "antd";
 
 class ForgotForm extends Component {
   state = {

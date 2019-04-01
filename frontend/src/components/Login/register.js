@@ -1,20 +1,8 @@
-import React, { Component, PropTypes } from "react";
-import { BrowserRouter as Route, Redirect, withRouter } from "react-router-dom";
+import React, { Component } from "react";
 
-import ReactDOM from "react-dom";
 import { Container } from "reactstrap";
 import { inject, observer } from "mobx-react";
-import {
-  Layout,
-  Form,
-  Icon,
-  Button,
-  Checkbox,
-  Input,
-  Modal,
-  message
-} from "antd";
-import { get } from "http";
+import { Form, Button, Input, Modal, message } from "antd";
 
 message.config({
   top: 150,

@@ -1,8 +1,6 @@
-import React, { Component, PropTypes } from "react";
-import { BrowserRouter as Route, Redirect, withRouter } from "react-router-dom";
+import React, { Component } from "react";
+import { BrowserRouter as Route, withRouter } from "react-router-dom";
 
-import ReactDOM from "react-dom";
-import { Container } from "reactstrap";
 import { inject, observer } from "mobx-react";
 import {
   Layout,
@@ -11,7 +9,6 @@ import {
   Button,
   Checkbox,
   Input,
-  Modal,
   Spin,
   notification
 } from "antd";
@@ -69,19 +66,25 @@ class LoginForm extends Component {
 
   handleLogin = () => {
     let {
-      userStore: { loginUser }
+      userStore: { loginUser, cookie }
     } = this.props;
 
     loginUser().then(res => {
+      let {
+        userStore: { currentUser }
+      } = this.props;
+
+      const name = currentUser.fullName;
       if (res) {
         notification["success"]({
-          message: "Welcome Back User!",
+          message: `Welcome Back ${name}`,
           description: "",
           duration: 2,
           onClick: () => {
             console.log("Notification Clicked!");
           }
         });
+
         return this.props.history.push("/wallet");
       } else {
         notification["error"]({
@@ -92,6 +95,7 @@ class LoginForm extends Component {
             console.log("Notification Clicked!");
           }
         });
+
         return this.props.history.push("/");
       }
     });
@@ -100,7 +104,16 @@ class LoginForm extends Component {
   render() {
     // let { getFieldDecorator } = this.props.form;
     let {
-      userStore: { currentUser, isLoading, loginUser, resp, isLoggedIn }
+      userStore: {
+        getCookie,
+        currentUser,
+        isLoading,
+        loginUser,
+        resp,
+        isLoggedIn,
+        cookies,
+        thing
+      }
     } = this.props;
 
     const handleWallet = () => {};
@@ -154,7 +167,7 @@ class LoginForm extends Component {
                 })(
                  
                 )} */}
-                <Input
+                <Input.Password
                   size="large"
                   prefix={
                     <Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />
@@ -184,6 +197,8 @@ class LoginForm extends Component {
                     size="large"
                     onClick={() => {
                       this.handleLogin();
+
+                      console.log(thing);
                       // authenticate();
                       // handleWallet();
                       // console.log(currentUser);

@@ -1,6 +1,5 @@
 import axios from "axios";
 import { action, decorate, observable } from "mobx";
-import User from "../models/User";
 
 class Api {
   api = axios.create({

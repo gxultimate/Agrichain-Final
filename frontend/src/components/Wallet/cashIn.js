@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { Layout, Card, Row, Col, Button, Tabs, Input, List } from "antd";
+import { Layout, Card, Button, Tabs, Input, List } from "antd";
 
-const TabPane = Tabs.TabPane;
 const ButtonGroup = Button.Group;
 function callback(key) {
   console.log(key);

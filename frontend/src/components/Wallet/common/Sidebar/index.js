@@ -1,26 +1,11 @@
 import React, { Component } from "react";
-import ReactDOM from "react-dom";
-import { Container } from "reactstrap";
-import { inject, observer } from "mobx-react";
-import {
-  Layout,
-  Form,
-  Icon,
-  Button,
-  Checkbox,
-  Input,
-  Modal,
-  message,
-  Menu,
-  Avatar
-} from "antd";
-import { BrowserRouter as Route, Redirect, withRouter } from "react-router-dom";
 
-const { Header, Content, Footer, Sider } = Layout;
+import { Layout, Icon, Menu } from "antd";
+import { BrowserRouter as Route, withRouter } from "react-router-dom";
+
+const { Sider } = Layout;
 
 const SubMenu = Menu.SubMenu;
-
-const MenuItem = Menu.Item;
 
 class Sidebar extends Component {
   state = {

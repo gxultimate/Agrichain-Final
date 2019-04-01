@@ -2,6 +2,8 @@ from tinydb import TinyDB, Query, where
 from hashlib import md5
 import datetime
 
+from flask import jsonify
+
 
 class User:
 
@@ -25,7 +27,9 @@ class User:
         db = TinyDB('./data/userCredential.dat')
         try:
             if len(db.search(where('userName') == _user)) == 1 and len(db.search(where('password') == _pass)) == 1:
-                return "Success"
+                userData = db.get(where("userName") == _user)
+
+                return jsonify(userData)
             else:
                 return "Failed"
 

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Layout, Card, Row, Col, Button, Tabs, Icon, Input, Modal } from "antd";
-
+import { inject, observer } from "mobx-react";
+import { withRouter } from "react-router-dom";
 const TabPane = Tabs.TabPane;
 const ButtonGroup = Button.Group;
 function callback(key) {
@@ -19,6 +20,9 @@ class WalletForm extends Component {
   };
 
   render() {
+    let {
+      userStore: { currentUser }
+    } = this.props;
     return (
       <Layout>
         <Modal
@@ -85,4 +89,4 @@ class WalletForm extends Component {
   }
 }
 
-export default WalletForm;
+export default withRouter(inject("userStore")(observer(WalletForm)));

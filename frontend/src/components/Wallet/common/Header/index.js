@@ -1,18 +1,7 @@
 import React, { Component } from "react";
 
-import {
-  Layout,
-  Form,
-  Icon,
-  Button,
-  Checkbox,
-  Input,
-  Modal,
-  message,
-  Menu,
-  Avatar
-} from "antd";
-
+import { Icon, Menu } from "antd";
+import { inject, observer } from "mobx-react";
 const SubMenu = Menu.SubMenu;
 class Headerbar extends Component {
   state = {};
@@ -25,6 +14,9 @@ class Headerbar extends Component {
   };
 
   render() {
+    let {
+      userStore: { currentUser, cookies, thing }
+    } = this.props;
     return (
       <Menu
         theme="dark"
@@ -39,11 +31,13 @@ class Headerbar extends Component {
           title={
             <span>
               <Icon type="user" />
-              <span>Account</span>
+              <span>{thing}</span>
             </span>
           }
         >
-          <Menu.Item key="6">My Account</Menu.Item>
+          <Menu.Item key="6" onClick={console.log(thing)}>
+            My Account
+          </Menu.Item>
           <Menu.Item key="7">Log Out</Menu.Item>
         </SubMenu>
       </Menu>
@@ -51,4 +45,4 @@ class Headerbar extends Component {
   }
 }
 
-export default Headerbar;
+export default inject("userStore")(observer(Headerbar));

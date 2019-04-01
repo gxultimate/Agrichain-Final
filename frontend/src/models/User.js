@@ -1,6 +1,7 @@
 import { action, observable, decorate } from "mobx";
+import { persist } from "mobx-persist";
 import Model from "./Model";
-
+import Cookie from "mobx-cookie";
 class User extends Model {
   constructor(props) {
     const defaults = {
