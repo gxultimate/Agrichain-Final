@@ -3,11 +3,11 @@ import React, { Component, useCallback, useState } from "react";
 import { Button, Layout, Modal, Input, Form, InputNumber, List } from "antd";
 
 import "ant-design-draggable-modal/dist/index.css";
-import "./modal.css";
+
 const FormItem = Form.Item;
-class SendModal extends Component {
+class RequestModal extends Component {
   render() {
-    const data = ["Transfer Fee ", "Recipient will Receive"];
+    const data = ["You will Receive"];
     return (
       <Layout>
         <Modal
@@ -15,10 +15,10 @@ class SendModal extends Component {
           onCancel={this.props.onCancel}
           footer={null}
           width={600}
-          title={"Send AGC"}
+          title={"Request AGC"}
           //   style={{}}
         >
-          <Form className="regForm ::-webkit-scrollbar ">
+          <Form className="regForm">
             <FormItem>
               <FormItem style={{ margin: "auto", textAlign: "center" }}>
                 <span>Available balance </span>
@@ -30,7 +30,7 @@ class SendModal extends Component {
                 </span>
                 <Input
                   size="large"
-                  placeholder="Your recipient address goes here"
+                  placeholder="Your sender address goes here"
                   style={{ width: "80%" }}
                 />
               </FormItem>
@@ -61,9 +61,9 @@ class SendModal extends Component {
                     renderItem={item => <List.Item>{item}</List.Item>}
                   />
                 </FormItem>
-                <FormItem style={{ textAlign: "center", marginBottom: "0px" }}>
+                <FormItem style={{ textAlign: "center" }}>
                   <Button size="large" type="primary">
-                    Confirm Transaction
+                    Confirm Request
                   </Button>
                 </FormItem>
               </FormItem>
@@ -75,4 +75,4 @@ class SendModal extends Component {
   }
 }
 
-export default SendModal;
+export default RequestModal;

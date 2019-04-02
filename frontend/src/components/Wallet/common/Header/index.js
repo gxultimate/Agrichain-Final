@@ -1,27 +1,31 @@
 import React, { Component } from "react";
-
+import { withRouter, browserHistory, Link } from "react-router-dom";
+// import { browserHistory } from "react-router";
 import { Icon, Menu } from "antd";
 import { inject, observer } from "mobx-react";
 const SubMenu = Menu.SubMenu;
 class Headerbar extends Component {
-  state = {};
+  state = {
+    logout: false
+  };
 
-  handleClick = e => {
-    console.log("click ", e);
-    this.setState({
-      current: e.key
-    });
+  handleLogout = () => {
+    this.props.history.push("/");
   };
 
   render() {
     let {
       userStore: { currentUser, cookies, thing }
     } = this.props;
+
+    // if (this.state.logout == true) {
+    //   return <Redirect to="/" />;
+    // }
+
     return (
       <Menu
         theme="dark"
         onClick={this.handleClick}
-        selectedKeys={[this.state.current]}
         mode="horizontal"
         style={{}}
       >
@@ -35,14 +39,14 @@ class Headerbar extends Component {
             </span>
           }
         >
-          <Menu.Item key="6" onClick={console.log(thing)}>
-            My Account
+          <Menu.Item key="6">My Account</Menu.Item>
+          <Menu.Item key="7" onClick={() => this.handleLogout()}>
+            Log Out
           </Menu.Item>
-          <Menu.Item key="7">Log Out</Menu.Item>
         </SubMenu>
       </Menu>
     );
   }
 }
 
-export default inject("userStore")(observer(Headerbar));
+export default withRouter(inject("userStore")(observer(Headerbar)));

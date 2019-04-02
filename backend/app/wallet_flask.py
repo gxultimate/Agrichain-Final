@@ -88,10 +88,11 @@ def register():
     parsedUsername = parsedBody['userName']
     parsedPassword = parsedBody['passWord']
     parsedRpassword = parsedBody['rpassWord']
+    wallet = generateWallet()
 
     try:
         user = User()
-        return user.addUser(parsedFullname, parsedCoopname, parsedCurraddress, parsedContactnum, parsedUsername, parsedPassword, parsedRpassword)
+        return user.addUser(wallet, parsedFullname, parsedCoopname, parsedCurraddress, parsedContactnum, parsedUsername, parsedPassword, parsedRpassword)
     except ValueError:
         return jsonify({status: 'failed'})
 
@@ -111,62 +112,62 @@ def changePass():
         return jsonify({status: 'failed'})
 
 
-@app.route('/wallet')
-def wallet():
-    return render_template('wallet_interface.html')
+# @app.route('/wallet')
+# def wallet():
+#     return render_template('wallet_interface.html')
 
 
 @app.route('/generateWallet', methods=['POST', 'GET'])
 def generateWallet():
-    if request.method == 'GET':
+    # if request.method == 'GET':
 
-        keccak = sha3.keccak_256()
-        priv = SigningKey.generate(curve=SECP256k1)
-        pub = priv.get_verifying_key().to_string()
+    keccak = sha3.keccak_256()
+    priv = SigningKey.generate(curve=SECP256k1)
+    pub = priv.get_verifying_key().to_string()
 
-        keccak.update(pub)
+    keccak.update(pub)
 
-        address = keccak.hexdigest()[24:]
+    address = keccak.hexdigest()[24:]
 
-        def test(addrstr):
-            assert(addrstr == checksum_encode(addrstr))
+    def test(addrstr):
+        assert(addrstr == checksum_encode(addrstr))
 
-        # print("Private key:", priv.to_string().hex())
-        # print("Public key: ", pub.hex())
-        # print("Address:    ", checksum_encode(address))
+    # print("Private key:", priv.to_string().hex())
+    # print("Public key: ", pub.hex())
+    # print("Address:    ", checksum_encode(address))
 
-        walletAddress = checksum_encode(address)
+    walletAddress = checksum_encode(address)
 
-        # save QR code and other inputs=====================================
-        # Address
-        # addr = qrcode.QRCode(
-        #     version=1,
-        #     error_correction=qrcode.constants.ERROR_CORRECT_L,
-        #     box_size=10,
-        #     border=0,
-        # )
-        # addr.add_data(checksum_encode(address))
-        # addr.make(fit=True)
+    # save QR code and other inputs=====================================
+    # Address
+    # addr = qrcode.QRCode(
+    #     version=1,
+    #     error_correction=qrcode.constants.ERROR_CORRECT_L,
+    #     box_size=10,
+    #     border=0,
+    # )
+    # addr.add_data(checksum_encode(address))
+    # addr.make(fit=True)
 
-        # addrImg = addr.make_image(fill_color="black", back_color="white")
+    # addrImg = addr.make_image(fill_color="black", back_color="white")
 
-        # addrImg.save('./templates/img/address.png')
+    # addrImg.save('./templates/img/address.png')
 
-        # # Private Key
-        # priveKey = qrcode.QRCode(
-        #     version=1,
-        #     error_correction=qrcode.constants.ERROR_CORRECT_L,
-        #     box_size=10,
-        #     border=0,
-        # )
-        # priveKey.add_data(priv.to_string().hex())
-        # priveKey.make(fit=True)
+    # # Private Key
+    # priveKey = qrcode.QRCode(
+    #     version=1,
+    #     error_correction=qrcode.constants.ERROR_CORRECT_L,
+    #     box_size=10,
+    #     border=0,
+    # )
+    # priveKey.add_data(priv.to_string().hex())
+    # priveKey.make(fit=True)
 
-        # priveKeyImg = priveKey.make_image(fill_color="black", back_color="white")
+    # priveKeyImg = priveKey.make_image(fill_color="black", back_color="white")
 
-        # priveKeyImg.save('./templates/img/privKey.png')
+    # priveKeyImg.save('./templates/img/privKey.png')
 
-        return walletAddress
+    return walletAddress
 
 # @app.route('/cashIn')
 # def cashIn():

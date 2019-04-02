@@ -8,17 +8,17 @@ from flask import jsonify
 class User:
 
     # adding user
-    def addUser(self, _name, _coop, _address, _contact, _username, _pass, _rpass):
+    def addUser(self, walletAddr, _name, _coop, _address, _contact, _username, _pass, _rpass):
         db = TinyDB('./data/userCredential.dat')
-        data = f'{_name, _coop,_address, _contact, _username, _pass, _rpass }{str(datetime.datetime.now())}'
+        data = f'{walletAddr,_name, _coop,_address, _contact, _username, _pass, _rpass }{str(datetime.datetime.now())}'
         _hash = md5()
         _hash.update(data.encode())
 
         try:
-            db.insert({'id': _hash.hexdigest(), 'fullName': _name, 'coopName': _coop, 'currentAddress': _address,
+            db.insert({'id': _hash.hexdigest(), 'walletAddress': walletAddr, 'fullName': _name, 'coopName': _coop, 'currentAddress': _address,
                        'contactNum':  _contact, 'userName': _username, 'password': _pass, 'repeatPassword': _rpass})
 
-            return str(_name)
+            return str(walletAddr)
         except:
             return 'Failed'
 

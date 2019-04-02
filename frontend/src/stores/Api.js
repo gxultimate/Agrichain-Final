@@ -47,20 +47,21 @@ class Api {
         console.log(error);
       });
   };
-  checkUser = data => {
-    this.api
-      .post("checkname", {
-        mode: "cors",
-        body: data
-      })
-      .then(response => {
-        console.log(response.data);
-      })
 
-      .catch(err => {
-        console.log(err);
-      });
-  };
+  // checkUser = data => {
+  //   this.api
+  //     .post("checkname", {
+  //       mode: "cors",
+  //       body: data
+  //     })
+  //     .then(response => {
+  //       console.log(response.data);
+  //     })
+
+  //     .catch(err => {
+  //       console.log(err);
+  //     });
+  // };
 }
 
 decorate(Api, {

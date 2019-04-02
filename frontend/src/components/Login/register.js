@@ -178,7 +178,6 @@ class RegisterForm extends Component {
                   className="login-form-button btnRegForm"
                   size="large"
                   onClick={() => {
-                    checkName();
                     registerUser();
                   }}
                 >

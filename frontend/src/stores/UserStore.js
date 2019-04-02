@@ -1,9 +1,11 @@
 import { observable, action, decorate, computed } from "mobx";
 import User from "../models/User";
 import Cookie from "mobx-cookie";
+import Cookies from "universal-cookie";
 class UserStore {
   currentUser = new User();
-  cookies = new Cookie("thing");
+  cookie = new Cookie("thing");
+  cookies = new Cookies();
   user = new User();
   api = undefined;
   nav = undefined;
@@ -31,9 +33,16 @@ class UserStore {
         this.currentUser.setProperty("passWord", data.data.passWord);
         this.currentUser.setProperty("currAddress", data.data.currAddress);
         this.currentUser.setProperty("contactNum", data.data.contactNum);
+        this.currentUser.setProperty("walletAddress", data.data.walletAddress);
+        this.cookies.set("walletAddr", data.data.walletAddress, {
+          expires: new Date(Date.now() + 2592000)
+        });
+        // this.cookieData = data.data.walletAddr;
+        // this.cookieData.push(data.data.walletAddr);
+        // this.cookieData.push(data.data.fullName);
+
         this.setCookie(data.data.fullName);
         this.isLoading = !this.isLoading;
-        // console.log(data.data.fullName);
         if (data.data !== "Failed") {
           resolve(true);
         } else {
@@ -44,12 +53,11 @@ class UserStore {
   };
 
   get thing() {
-    console.log(this.cookies);
-    return this.cookies.value;
+    return this.cookie.value;
   }
 
   setCookie = value => {
-    this.cookies.set(value, { expires: 2 });
+    this.cookie.set(value, { expires: 2 });
   };
 
   // this.api.login(this.currentUser).then(data => {
@@ -73,8 +81,8 @@ class UserStore {
 }
 
 decorate(UserStore, {
+  cookies: observable,
   thing: computed,
-
   setCookie: action,
   cookie: observable,
   user: observable,
@@ -83,8 +91,7 @@ decorate(UserStore, {
   registerUser: action,
   checkName: action,
   loginUser: action,
-  forgotPasswordUser: action,
-  resp: observable
+  forgotPasswordUser: action
 });
 
 export default UserStore;

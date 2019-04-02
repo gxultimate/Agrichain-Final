@@ -1,6 +1,6 @@
 import "antd/dist/antd.css";
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, withRouter } from "react-router-dom";
 import { Provider } from "mobx-react";
 
 // Pages init

@@ -1,25 +1,19 @@
 import React, { Component } from "react";
-
+import { Layout } from "antd";
 import {
-  Layout,
-  Form,
-  Icon,
-  Button,
-  Checkbox,
-  Input,
-  Modal,
-  message,
-  Menu,
-  Avatar
-} from "antd";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+  BrowserRouter as Router,
+  Route,
+  withRouter,
+  Switch
+} from "react-router-dom";
 
 import Sidebar from "./common/Sidebar";
 import Headerbar from "./common/Header";
 import WalletForm from "./wallet";
 import CashInForm from "./cashIn";
+import CashOutForm from "./cashOut";
 
-const { Content, Header, Footer, Sider } = Layout;
+const { Content } = Layout;
 
 class Wallet extends Component {
   render() {
@@ -40,8 +34,11 @@ class Wallet extends Component {
                   height: "90%"
                 }}
               >
-                <Route exact path="/wallet" component={WalletForm} />
-                <Route exact path="/wallet/cashin" component={CashInForm} />
+                <Switch>
+                  <Route exact path="/wallet" component={WalletForm} />
+                  <Route exact path="/wallet/cashin" component={CashInForm} />
+                  <Route exact path="/wallet/cashout" component={CashOutForm} />
+                </Switch>
               </div>
             </Content>
           </Layout>

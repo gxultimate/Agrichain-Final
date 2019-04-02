@@ -1,5 +1,5 @@
 import { action, observable, decorate } from "mobx";
-import { persist } from "mobx-persist";
+
 import Model from "./Model";
 import Cookie from "mobx-cookie";
 class User extends Model {
@@ -13,7 +13,7 @@ class User extends Model {
       rpassWord: "",
       currAddress: "",
       contactNum: 0,
-      response: ""
+      walletAddress: ""
     };
     super({ ...defaults, ...props });
   }
@@ -28,6 +28,7 @@ decorate(User, {
   currAddress: observable,
   contactNum: observable,
   response: observable,
+  walletAddress: observable,
   reset: action
 });
 

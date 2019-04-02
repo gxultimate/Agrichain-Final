@@ -24,6 +24,9 @@ class Sidebar extends Component {
     this.props.history.push("/wallet/cashin");
   };
 
+  handleEventCashOut = () => {
+    this.props.history.push("/wallet/cashout");
+  };
   render() {
     return (
       <Sider
@@ -45,7 +48,7 @@ class Sidebar extends Component {
             <Icon type="bank" />
             <span>Cash In</span>
           </Menu.Item>
-          <Menu.Item key="3">
+          <Menu.Item key="3" onClick={this.handleEventCashOut}>
             <Icon type="credit-card" />
             <span>Cash Out</span>
           </Menu.Item>

@@ -36,22 +36,6 @@ class LoginForm extends Component {
     redirect: false
   };
 
-  // handleChange = e => {
-  //   this.form.validateFields(e.target);
-  // };
-
-  // contactSubmit = e => {
-  //   e.preventDefaault();
-  // this.form.validateFields();
-  // if (!this.form.isValid()){
-  //   console.log("form is invalid")
-  // }
-  // else{
-  //   console.log(form)
-  // }
-
-  // };
-
   toggleModalReg() {
     this.setState({
       visible: !this.state.visible
@@ -66,7 +50,7 @@ class LoginForm extends Component {
 
   handleLogin = () => {
     let {
-      userStore: { loginUser, cookie }
+      userStore: { loginUser }
     } = this.props;
 
     loginUser().then(res => {
@@ -109,14 +93,11 @@ class LoginForm extends Component {
         currentUser,
         isLoading,
         loginUser,
-        resp,
         isLoggedIn,
-        cookies,
-        thing
+        thing,
+        cookieData
       }
     } = this.props;
-
-    const handleWallet = () => {};
 
     return (
       <Layout>
@@ -199,6 +180,7 @@ class LoginForm extends Component {
                       this.handleLogin();
 
                       console.log(thing);
+
                       // authenticate();
                       // handleWallet();
                       // console.log(currentUser);
