@@ -1,19 +1,20 @@
 import React, { Component } from "react";
-import { Layout } from "antd";
+import { Layout, Menu, Icon } from "antd";
 import {
   BrowserRouter as Router,
   Route,
   withRouter,
   Switch
 } from "react-router-dom";
-
+import { inject, observer } from "mobx-react";
 import Sidebar from "./common/Sidebar";
 import Headerbar from "./common/Header";
 import WalletForm from "./wallet";
 import CashInForm from "./cashIn";
 import CashOutForm from "./cashOut";
-
+import PayBillsForm from "./pay";
 const { Content } = Layout;
+const SubMenu = Menu.SubMenu;
 
 class Wallet extends Component {
   render() {
@@ -35,9 +36,16 @@ class Wallet extends Component {
                 }}
               >
                 <Switch>
-                  <Route exact path="/wallet" component={WalletForm} />
-                  <Route exact path="/wallet/cashin" component={CashInForm} />
-                  <Route exact path="/wallet/cashout" component={CashOutForm} />
+                  <Route exact path="/wallet" render={() => <WalletForm />} />
+                  <Route path="/wallet/cashin" render={() => <CashInForm />} />
+                  <Route
+                    path="/wallet/cashout"
+                    render={() => <CashOutForm />}
+                  />
+                  <Route
+                    path="/wallet/paybill"
+                    render={() => <PayBillsForm />}
+                  />
                 </Switch>
               </div>
             </Content>
@@ -48,4 +56,4 @@ class Wallet extends Component {
   }
 }
 
-export default Wallet;
+export default withRouter(inject("userStore")(observer(Wallet)));

@@ -27,6 +27,9 @@ class Sidebar extends Component {
   handleEventCashOut = () => {
     this.props.history.push("/wallet/cashout");
   };
+  handleEventPayBill = () => {
+    this.props.history.push("/wallet/paybill");
+  };
   render() {
     return (
       <Sider
@@ -52,12 +55,8 @@ class Sidebar extends Component {
             <Icon type="credit-card" />
             <span>Cash Out</span>
           </Menu.Item>
-          <Menu.Item key="4">
-            <Icon type="upload" />
-            <span>Invest</span>
-          </Menu.Item>
 
-          <Menu.Item key="5">
+          <Menu.Item key="4" onClick={this.handleEventPayBill}>
             <Icon type="file-done" />
             <span>Pay Bills</span>
           </Menu.Item>
@@ -70,14 +69,14 @@ class Sidebar extends Component {
               </span>
             }
           >
-            <Menu.Item key="6">
+            <Menu.Item key="5">
               <span>
                 {" "}
                 <Icon type="user-add" />
               </span>
               Agricultural
             </Menu.Item>
-            <Menu.Item key="7">
+            <Menu.Item key="6">
               {" "}
               <span>
                 {" "}
@@ -85,7 +84,7 @@ class Sidebar extends Component {
               </span>
               Emergency
             </Menu.Item>
-            <Menu.Item key="8">
+            <Menu.Item key="7">
               <span>
                 {" "}
                 <Icon type="read" />
@@ -93,7 +92,7 @@ class Sidebar extends Component {
               Educational
             </Menu.Item>
 
-            <Menu.Item key="9">
+            <Menu.Item key="8">
               {" "}
               <span>
                 {" "}

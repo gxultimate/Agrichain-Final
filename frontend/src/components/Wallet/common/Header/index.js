@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { withRouter, browserHistory, Link } from "react-router-dom";
+import { withRouter, browserHistory, Link, Redirect } from "react-router-dom";
 // import { browserHistory } from "react-router";
 import { Icon, Menu } from "antd";
 import { inject, observer } from "mobx-react";
@@ -10,7 +10,7 @@ class Headerbar extends Component {
   };
 
   handleLogout = () => {
-    this.props.history.push("/");
+    window.location.href = "/";
   };
 
   render() {
@@ -18,9 +18,9 @@ class Headerbar extends Component {
       userStore: { currentUser, cookies, thing }
     } = this.props;
 
-    // if (this.state.logout == true) {
-    //   return <Redirect to="/" />;
-    // }
+    if (this.state.logout == true) {
+      return <Redirect to={{ pathname: "/" }} />;
+    }
 
     return (
       <Menu

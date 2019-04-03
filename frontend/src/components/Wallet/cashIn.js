@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Layout, Card, Button, Tabs, Input, List } from "antd";
-
+import { inject, observer } from "mobx-react";
+import { withRouter } from "react-router-dom";
 const ButtonGroup = Button.Group;
 function callback(key) {
   console.log(key);
@@ -62,4 +63,4 @@ class CashInForm extends Component {
   }
 }
 
-export default CashInForm;
+export default withRouter(inject("userStore")(observer(CashInForm)));

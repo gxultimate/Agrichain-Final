@@ -1,8 +1,15 @@
 import React, { Component } from "react";
 import { Layout, Card, Button, Tabs, Input, List } from "antd";
-
+import {
+  BrowserRouter as Router,
+  Route,
+  withRouter,
+  Switch
+} from "react-router-dom";
+import { inject, observer } from "mobx-react";
 const ButtonGroup = Button.Group;
 const data = ["Withdrawal Fee", "Total Amount Cashout"];
+
 class CashOutForm extends Component {
   state = {};
   render() {
@@ -57,4 +64,4 @@ class CashOutForm extends Component {
   }
 }
 
-export default CashOutForm;
+export default withRouter(inject("userStore")(observer(CashOutForm)));
