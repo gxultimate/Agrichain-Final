@@ -1,0 +1,5 @@
+Wallet->
+
+- get transactions -> verify wallet address and private keys -> if verified sign transactions with private key send to node.
+
+-store user credentials , private and public key

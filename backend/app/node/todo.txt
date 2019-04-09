@@ -1,0 +1,8 @@
+--> node 
+
+
+-> receive transaction verify public and private key send to other nodes for validation check balance if true 
+
+-> create block of transactions sends to miners to validate transaction and create blocks 
+
+->   
