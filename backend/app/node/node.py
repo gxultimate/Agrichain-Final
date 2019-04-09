@@ -3,8 +3,7 @@ from peer_lib import Peer, getTimeStamp
 from socketIO_client import SocketIO as socks_c, LoggingNamespace
 from time import sleep
 from flask_socketio import SocketIO, send, emit
-from flask import Flask, request
-from flask_restful import Api
+from flask import Flask, request, jsonify
 
 
 app = Flask(__name__)
@@ -22,6 +21,10 @@ def startServer(ip, port, branch):
     peer.connectToInitialPeers(ip, port, branch)
     sleep(1)
     print(f"{getTimeStamp()} >> Waiting for Connection ...")
+
+@app.route('/testing', methods=['POST', 'GET'])
+def testing():
+    return jsonify({ 'message' : 'IT WORKS!'})
 
 
 @socketio.on('connect')
