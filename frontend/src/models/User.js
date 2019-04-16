@@ -13,7 +13,8 @@ class User extends Model {
       rpassWord: "",
       currAddress: "",
       contactNum: 0,
-      walletAddress: ""
+      walletAddress: "",
+      isValid: ""
     };
     super({ ...defaults, ...props });
   }
@@ -29,6 +30,7 @@ decorate(User, {
   contactNum: observable,
   response: observable,
   walletAddress: observable,
+  isValid: observable,
   reset: action
 });
 

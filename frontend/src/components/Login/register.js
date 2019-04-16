@@ -2,8 +2,8 @@ import React, { Component } from "react";
 
 import { Container } from "reactstrap";
 import { inject, observer } from "mobx-react";
-import { Form, Button, Input, Modal, message } from "antd";
-
+import { Form, Button, Input, Modal, message, Popconfirm, Popover } from "antd";
+import { BrowserRouter as Route, withRouter } from "react-router-dom";
 message.config({
   top: 150,
   duration: 2
@@ -23,14 +23,21 @@ class RegisterForm extends Component {
     });
   };
   render() {
-    const authenticate = () => {
-      const hide = message.loading("Creating an Account...", 0);
-      setTimeout(hide, 2500);
-    };
+    // const authenticate = () => {
+    //   if (isValid !== false) {
+    //     const hide = message.loading("Creating an Account...", 0);
+    //     setTimeout(hide, 2500);
+    //     this.setState({ visible: !this.state.visible });
+    //   } else {
+    //     const hide = message.warning("UserName Already Exists...", 0);
+    //     setTimeout(hide, 2000);
+    //   }
+    // };
 
     let {
-      userStore: { checkName, postData, user, registerUser }
+      userStore: { checkName, postData, user, registerUser, isValid }
     } = this.props;
+    const isvalid = isValid;
 
     let { getFieldDecorator } = this.props.form;
 
@@ -138,6 +145,7 @@ class RegisterForm extends Component {
                   <Input
                     name="userName"
                     type="text"
+                    // onChange={authenticate()}
                     onChange={userName =>
                       user.setProperty("userName", userName.target.value)
                     }
@@ -148,7 +156,7 @@ class RegisterForm extends Component {
                 {getFieldDecorator("passWord", {
                   rules: [{ required: true, message: "password is required" }]
                 })(
-                  <Input
+                  <Input.Password
                     name="passWord"
                     type="password"
                     onChange={passWord =>
@@ -163,7 +171,7 @@ class RegisterForm extends Component {
                     { required: true, message: "please repeat your password" }
                   ]
                 })(
-                  <Input
+                  <Input.Password
                     name="rpassWord"
                     type="password"
                     onChange={rpassWord =>
@@ -193,4 +201,4 @@ class RegisterForm extends Component {
 }
 
 const WrapRegister = Form.create()(RegisterForm);
-export default inject("userStore")(observer(WrapRegister));
+export default withRouter(inject("userStore")(observer(WrapRegister)));

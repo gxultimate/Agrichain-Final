@@ -38,10 +38,15 @@ class Sidebar extends Component {
         onCollapse={this.onCollapse}
         style={{ marginBottom: "5vh" }}
       >
-        <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
+        <Menu
+          theme="dark"
+          defaultSelectedKeys={["1"]}
+          defaultOpenKeys={["sub1"]}
+          mode="inline"
+        >
           <Menu.Item
             key="1"
-            style={{ marginTop: "7vh" }}
+            style={{ marginTop: "7.5vh" }}
             onClick={this.handleEventWallet}
           >
             <Icon type="wallet" />

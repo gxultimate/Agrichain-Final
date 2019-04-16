@@ -86,7 +86,6 @@ class LoginForm extends Component {
   };
 
   render() {
-    // let { getFieldDecorator } = this.props.form;
     let {
       userStore: {
         getCookie,
@@ -98,7 +97,7 @@ class LoginForm extends Component {
         cookieData
       }
     } = this.props;
-
+    // let { getFieldDecorator } = this.props.form;
     return (
       <Layout>
         <Layout>
@@ -122,9 +121,7 @@ class LoginForm extends Component {
                   rules: [
                     { required: true, message: "please input your username" }
                   ]
-                })(
-            
-                )} */}
+                })()} */}
                 <Input
                   size="large"
                   prefix={
@@ -145,9 +142,7 @@ class LoginForm extends Component {
                       message: "please input your password"
                     }
                   ]
-                })(
-                 
-                )} */}
+                })()} */}
                 <Input.Password
                   size="large"
                   prefix={
@@ -178,12 +173,6 @@ class LoginForm extends Component {
                     size="large"
                     onClick={() => {
                       this.handleLogin();
-
-                      console.log(thing);
-
-                      // authenticate();
-                      // handleWallet();
-                      // console.log(currentUser);
                     }}
                   >
                     {isLoading ? <Spin indicator={antIcon} /> : "Log in"}

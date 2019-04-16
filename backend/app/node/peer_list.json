@@ -4,5 +4,5 @@
   { "ip": "127.0.0.1", "port": "3002", "branch": "Pototan" },
   { "ip": "127.0.0.1", "port": "3003", "branch": "New Lucena" },
   { "ip": "127.0.0.1", "port": "3004", "branch": "Alimodian" },
-  { "ip": "127.0.0.1", "port": "3005/sendTransaction", "branch": "Wallet" }
+  { "ip": "127.0.0.1", "port": "3005/sendtransaction", "branch": "Wallet" }
 ]

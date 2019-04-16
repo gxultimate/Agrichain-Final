@@ -53,26 +53,33 @@ class WalletForm extends Component {
     let {
       userStore: { currentUser, thing, cookies }
     } = this.props;
-    const hellow = "hello";
+
+    const cookieData = cookies.get("userData");
+    const walletAddr = cookieData["walletAddress"];
+    const React = require("react");
+    const QrCode = require("qrcode.react");
+
     return (
       <Layout>
         <Modal
           title={`${thing} Wallet Address`}
-          bodyStyle={{ height: "15vh" }}
-          style={{ height: "30vh" }}
+          bodyStyle={{ height: "30vh" }}
+          style={{ height: "40vh" }}
           visible={this.state.visible}
           onCancel={this.toggleQrCode.bind(this)}
           footer={null}
           bodyStyle={{ scrollBehavior: true }}
         >
-          <Layout style={{ marginTop: "4vh" }}>
+          <Layout style={{ marginTop: "4vh", backgroundColor: "white" }}>
             <Row>
               <Col>
                 <Input
                   id="wallet"
-                  value={cookies.get("walletAddr")}
+                  value={`${walletAddr}`}
+                  readOnlywal
+                  style={{ marginBottom: "4vh" }}
                   addonAfter={
-                    <CopyToClipboard text={cookies.get("walletAddr")}>
+                    <CopyToClipboard text={`${walletAddr}`}>
                       <Popover content={"Copied!"} trigger="click">
                         <a>
                           <Icon type="copy" />
@@ -81,6 +88,14 @@ class WalletForm extends Component {
                     </CopyToClipboard>
                   }
                 />
+                <Layout
+                  style={{
+                    margin: "5vh 20vh 5vh 21.5vh"
+                  }}
+                  theme="dark"
+                >
+                  <QrCode value={`${walletAddr}`} size={200} />
+                </Layout>
               </Col>
             </Row>
           </Layout>
@@ -125,7 +140,7 @@ class WalletForm extends Component {
               </ButtonGroup>
             </Card>
           </Col>
-          <Col span={16} style={{ marginLeft: "4vh", height: "80vh" }}>
+          <Col span={16} style={{ marginLeft: "4vh", height: "50vh" }}>
             <Tabs defaultActiveKey="1" onChange={callback}>
               <TabPane tab="Transaction History" key="1">
                 {" "}

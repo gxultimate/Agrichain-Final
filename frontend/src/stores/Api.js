@@ -6,18 +6,15 @@ class Api {
     baseURL: "http://localhost:5000/"
   });
 
-  register = data => {
-    this.api
-      .post("register", {
-        mode: "cors",
-        body: data
-      })
-      .then(response => {
-        console.log(response.data);
-      })
-      .catch(err => {
-        console.log(err);
-      });
+  walletapi = axios.create({
+    baseURL: "http://localhost:3001/"
+  });
+
+  register = async data => {
+    return this.api.post("register", {
+      mode: "cors",
+      body: data
+    });
   };
 
   login = async data => {
@@ -25,14 +22,6 @@ class Api {
       mode: "cors",
       body: data
     });
-    // .then(response => {
-    // this.user.setProperty("response", response.data);
-    // console.log(this.user);
-    //   return response;
-    // })
-    // .catch(error => {
-    //   return error;
-    // });
   };
   forgotPass = data => {
     this.api
@@ -48,27 +37,27 @@ class Api {
       });
   };
 
-  // checkUser = data => {
-  //   this.api
-  //     .post("checkname", {
-  //       mode: "cors",
-  //       body: data
-  //     })
-  //     .then(response => {
-  //       console.log(response.data);
-  //     })
-
-  //     .catch(err => {
-  //       console.log(err);
-  //     });
-  // };
+  sendtransaction = data => {
+    this.walletapi
+      .post("sendtransaction", {
+        mode: "cors",
+        body: data
+      })
+      .then(response => {
+        console.log(response.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
 }
 
 decorate(Api, {
   login: action,
   forgotPass: action,
   register: action,
-  user: observable
+  user: observable,
+  sendtransaction: action
 });
 
 export default Api;

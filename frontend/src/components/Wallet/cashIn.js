@@ -1,17 +1,23 @@
 import React, { Component } from "react";
 import { Layout, Card, Button, Tabs, Input, List } from "antd";
-import { inject, observer } from "mobx-react";
-import { withRouter } from "react-router-dom";
+import {
+  withRouter,
+  NavLink,
+  BrowserRouter as Router,
+  Route
+} from "react-router-dom";
+
 const ButtonGroup = Button.Group;
+const { Content } = Layout;
 function callback(key) {
   console.log(key);
 }
+const data = ["Cooperative Location", "Amount", "Fee", "Amount Due"];
 
 class CashInForm extends Component {
-  state = {};
-  render() {
-    const data = ["Cooperative Location", "Amount", "Fee", "Amount Due"];
+  CashIn = () => {};
 
+  render() {
     return (
       <Layout>
         <Card
@@ -63,4 +69,4 @@ class CashInForm extends Component {
   }
 }
 
-export default withRouter(inject("userStore")(observer(CashInForm)));
+export default withRouter(CashInForm);

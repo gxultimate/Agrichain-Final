@@ -5,16 +5,15 @@ from time import sleep
 from socketIO_client import SocketIO as socks_c, LoggingNamespace
 from flask_cors import CORS, cross_origin
 import requests
+from pycoin.ecdsa import generator_secp256k1, sign, verify
 from ecdsa import SigningKey, SECP256k1
 import sha3
 import qrcode
 import sys
-from data import db
 from data.db import User
-from flask_restful import Api
-
 import json
-
+import ast
+import binascii
 
 app = Flask(__name__)
 app.config['CORS_HEADERS'] = 'Content-Type'
@@ -64,10 +63,11 @@ def checkname():
 
     try:
         user = User()
+        print(sign)
         return user.checkName(parsedFullname)
 
     except ValueError:
-        return jsonify({status: 'failed'})
+        return jsonify({'status': 'failed'})
 
 
 @app.route('/register', methods=['POST', 'GET'])
@@ -75,11 +75,10 @@ def checkname():
 def register():
 
     wallet = generateWallet()
-
-    userWallet = json.loads(wallet)
-    privateKey = userWallet['privateKey']
-    publicKey = userWallet['publicKey']
-    walletAddress = userWallet['walletAddress']
+    walletaddr = eval(wallet.data)
+    privateKey = walletaddr['privateKey']
+    publicKey = walletaddr['publicKey']
+    walletAddress = walletaddr['walletAddress']
 
     data = request.data
     parsed = json.loads(data.decode())
@@ -96,7 +95,7 @@ def register():
         user = User()
         return user.addUser(walletAddress, publicKey, privateKey, parsedFullname, parsedCoopname, parsedCurraddress, parsedContactnum, parsedUsername, parsedPassword, parsedRpassword)
     except ValueError:
-        return jsonify({status: 'failed'})
+        return jsonify({'status': 'failed'})
 
 
 @app.route('/forgotPass', methods=['POST', 'GET'])
@@ -111,7 +110,7 @@ def changePass():
         user = User()
         return user.changePassword(parsedBody['userName'], parsedBody['passWord'])
     except ValueError:
-        return jsonify({status: 'failed'})
+        return jsonify({'status': 'failed'})
 
 
 @app.route('/generateWallet', methods=['POST', 'GET'])
@@ -130,31 +129,40 @@ def generateWallet():
         assert(addrstr == checksum_encode(addrstr))
 
     privateKey = priv.to_string().hex()
+
+    signingKey = priv.to_string()
+    sign = binascii.unhexlify(privateKey)
     publicKey = pub.hex()
     walletAddress = checksum_encode(address)
 
+    # sign = signingKey.encode('ASCII')
+    print(sign)
+    print(signingKey)
+    print(privateKey)
+
     walletCredentials = {'privateKey': privateKey,
+                         #  'signingKey': sign,
                          'publicKey': publicKey,
                          'walletAddress': walletAddress}
 
     return json.dumps(walletCredentials)
 
 
-@app.route('/checkBalance', methods=['POST', 'GET'])
-def checkBalance():
-    return "wow"
+# @app.route('/checkBalance', methods=['POST', 'GET'])
+# def checkBalance():
+#     return "wow"
 
 
-@app.route('/sendTransaction', methods=['POST', 'GET'])
-@cross_origin()
-def sendTransaction():
+# @app.route('/sendTransaction', methods=['POST', 'GET'])
+# @cross_origin()
+# def sendTransaction():
 
-    try:
-        requests.get("127.0.0.1/3001")
+#     try:
+#         requests.get("127.0.0.1/3001")
 
-    except:
-        print("error")
+#     except:
+#         print("error")
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=3005)
+    app.run(debug=True)

@@ -2,12 +2,18 @@ from threading import Thread
 from peer_lib import Peer, getTimeStamp
 from socketIO_client import SocketIO as socks_c, LoggingNamespace
 from time import sleep
+import os
+from flask import Flask, jsonify, request, blueprints
 from flask_socketio import SocketIO, send, emit
 from flask import Flask, request, jsonify
-
+from blueprints import wallet
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'admin'
+
+app.register_blueprint(wallet.wallet)
+cors = CORS(app)
 socketio = SocketIO(app)
 
 peer = Peer()
@@ -22,9 +28,10 @@ def startServer(ip, port, branch):
     sleep(1)
     print(f"{getTimeStamp()} >> Waiting for Connection ...")
 
+
 @app.route('/testing', methods=['POST', 'GET'])
 def testing():
-    return jsonify({ 'message' : 'IT WORKS!'})
+    return jsonify({'message': 'IT WORKS!'})
 
 
 @socketio.on('connect')
@@ -63,5 +70,6 @@ if __name__ == "__main__":
     ip = "127.0.0.1"
     startServer(ip, port, branch)
     Thread(target=handleMessage).start()
-
-    socketio.run(app, host=ip, port=port)
+    # socketio.start_background_task(target=handleMessage)
+    socketio.run(app, host=ip, port=port, debug=True,
+                 use_reloader=False)

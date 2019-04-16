@@ -2,7 +2,6 @@ from tinydb import TinyDB, Query, where
 from hashlib import md5
 import datetime
 import tasho
-
 from flask import jsonify
 
 
@@ -12,37 +11,42 @@ class User:
     def addUser(self, walletAddr, _privateKey, _publicKey, _name, _coop, _address, _contact, _username, _pass, _rpass):
 
         db = tasho.Database.open('./data/walletUser')
+        tbl_user = db.table['walletUser']
         data = f'{walletAddr,_privateKey,_publicKey,_name, _coop,_address, _contact, _username, _pass, _rpass }{str(datetime.datetime.now())}'
         _hash = md5()
         _hash.update(data.encode())
-
         try:
-            tbl_user = db.table['walletUser']
+            search = tbl_user.get(_username)
+            if search is not None:
 
-            tbl_user.insert(_username, {'id': _hash.hexdigest(), 'privateKey': _privateKey, 'publicKey': _publicKey, 'walletAddress': walletAddr, 'fullName': _name, 'coopName': _coop, 'currentAddress': _address,
-                                        'contactNum':  _contact, 'userName': _username, 'password': _pass, 'repeatPassword': _rpass})
+                return str(_username)
+            else:
 
-            return str(walletAddr)
+                tbl_user.insert(_username, {'id': _hash.hexdigest(), 'privateKey': _privateKey, 'publicKey': _publicKey, 'walletAddress': walletAddr, 'fullName': _name, 'coopName': _coop, 'currentAddress': _address,
+                                            'contactNum':  _contact, 'userName': _username, 'password': _pass, 'repeatPassword': _rpass})
+
+            return str('Success')
         except:
             return 'Failed'
 
 # checking user
     def checkUser(self, _user, _pass):
+
         db = tasho.Database.open('./data/walletUser')
         tbl_user = db.table['walletUser']
         search = tbl_user.get(_user)
+
         try:
 
-            if len(search['userName']) > 1 and len(search['password']) > 1:
+            if search['userName'] is not None and search['password'] is not None:
                 userData = search.dict
-
                 return jsonify(userData)
+                # return str(search['password'])
             else:
-                print(len(search['userName']))
                 return "Failed"
 
         except:
-            return 'Failed'
+            return 'FailedAgain'
 
     def changePassword(self, _checkusername, _npassword):
         db = tasho.Database.open('./data/walletUser')
