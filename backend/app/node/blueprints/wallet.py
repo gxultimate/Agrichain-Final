@@ -1,8 +1,7 @@
 from flask import Blueprint, jsonify, request
 from flask_cors import CORS, cross_origin
-
 import os
-from .db import Address
+from .db import Transaction
 import hashlib
 import json
 import binascii
@@ -48,23 +47,32 @@ def extract_public_key_and_address(private_key):
     return public_key_compressed, sender_address
 
 
-def check_value_for_transaction_fee(amount):
-    if amount >= 1:
-        return .005
-    elif amount >= 0.5 and amount <= 0.99:
-        return .003
-    elif amount >= 0.01 and amount <= 0.04:
-        return .002
-    else:
-        return .001
+# def check_value_for_transaction_fee(amount):
+#     if amount >= 1:
+#         return .005
+#     elif amount >= 0.5 and amount <= 0.99:
+#         return .003
+#     elif amount >= 0.01 and amount <= 0.04:
+#         return .002
+#     else:
+#         return .001
+
+
+def getDateStamp():
+    currentDT = datetime.datetime.now()
+    return currentDT.strftime('%Y-%m-%d')
+
+
+def getTimeStamp():
+    currentDT = datetime.datetime.now()
+    return currentDT.strftime("%H:%M:%S")
 
 
 @wallet.route('/sendtransaction', methods=['POST', 'GET'])
 @cross_origin()
 def sendTransaction():
 
-    # try:
-    address = Address()
+    # try
 
     data = request.data
     parsed = json.loads(data.decode())
@@ -73,20 +81,26 @@ def sendTransaction():
     parsedSigningKey = parsedBody['senderPrivateKey']
     parsedPublicKey = parsedBody['senderPublicKey']
     parsedAmount = parsedBody['amount']
+    parsedData = parsedBody['data']
     parsedRecipientAddress = parsedBody['recipientWalletAddress']
-    # signingkey2 = bytes.fromhex(parsedPublicKey).decode('utf-8')
 
     sender_private_key = private_key_hex_to_int(parsedPublicKey)
     public_key_compressed, sender_address = extract_public_key_and_address(
         sender_private_key)
 
+    transaction_fee = 0.3125
+
     transaction = {
         'from': parsedSigningKey,
         'to': parsedRecipientAddress,
         'amount': parsedAmount,
-        'dateCreated': str(datetime.datetime.now()),
-        'transactionFee': check_value_for_transaction_fee(parsedAmount)
-    }
+        'dateCreated': getDateStamp(),
+        'hourCreated': getTimeStamp(),
+        'transactionFee': transaction_fee,
+        'data': parsedData}
+
+    validTransaction = Transaction()
+    # validTransaction.addValidatedTransactions(transaction)
 
     json_encoder = json.JSONEncoder(separators=(',', ':'))
     trans_json = json_encoder.encode(transaction)
@@ -107,21 +121,7 @@ def sendTransaction():
     valid = verify(generator_secp256k1, pub_key, trans_hash, trans_signature)
     print("is signature valid? " + str(valid))
 
-    return (parsedRecipientAddress)
-
-    # signingkey = bytes.fromhex(parsedSigningKey).decode()
-
-    # transaction = f'{parsedAddress, parsedAmount ,parsedRecipientAddress}'
-    # _hash = md5()
-    # _hash.update(transaction.encode())
-
-    # signature = newSigningKey.sign(_hash.hexdigest())
-
-    # address.addNewAddress(parsedAddress)
-
-    # return address.addNewSignTransaction(signature)
-    # except:
-    #     return jsonify({'status': False})
+    return validTransaction.addValidatedTransactions(transaction)
 
 
 @wallet.route('/checkbalance', methods=['POST', 'GET'])

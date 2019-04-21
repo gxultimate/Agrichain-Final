@@ -16,7 +16,7 @@ import { withRouter } from "react-router-dom";
 import SendModal from "./modal/send";
 import RequestModal from "./modal/request";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-// import ClipBoard from "clipboard";
+
 const TabPane = Tabs.TabPane;
 const ButtonGroup = Button.Group;
 function callback(key) {

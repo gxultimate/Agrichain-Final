@@ -135,33 +135,15 @@ def generateWallet():
     publicKey = pub.hex()
     walletAddress = checksum_encode(address)
 
-    # sign = signingKey.encode('ASCII')
     print(sign)
     print(signingKey)
     print(privateKey)
 
     walletCredentials = {'privateKey': privateKey,
-                         #  'signingKey': sign,
                          'publicKey': publicKey,
                          'walletAddress': walletAddress}
 
     return json.dumps(walletCredentials)
-
-
-# @app.route('/checkBalance', methods=['POST', 'GET'])
-# def checkBalance():
-#     return "wow"
-
-
-# @app.route('/sendTransaction', methods=['POST', 'GET'])
-# @cross_origin()
-# def sendTransaction():
-
-#     try:
-#         requests.get("127.0.0.1/3001")
-
-#     except:
-#         print("error")
 
 
 if __name__ == '__main__':

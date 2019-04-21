@@ -12,7 +12,7 @@ class Wallet extends Model {
       senderPrivateKey: "",
       senderPublicKey: "",
       recipientWalletAddress: "",
-
+      data: "",
       balance: ""
     };
     super({ ...defaults, ...props });
@@ -25,6 +25,7 @@ decorate(Wallet, {
   recipientWalletAddress: observable,
   senderPrivateKey: observable,
   senderPublicKey: observable,
+  data: observable,
   balance: observable
 });
 

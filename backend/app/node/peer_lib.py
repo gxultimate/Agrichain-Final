@@ -11,6 +11,11 @@ def getTimeStamp():
     return currentDT.strftime("%H:%M:%S")
 
 
+def getDateStamp():
+    currentDT = datetime.datetime.now()
+    return currentDT.strftime('%Y-%m-%d')
+
+
 class Peer:
 
     def __init__(self):
@@ -55,6 +60,7 @@ class Peer:
     def reciprocateConnection(self, ip, port, branch):
         sleep(2)
         try:
+
             server = socks_c(ip, port, LoggingNamespace,
                              wait_for_connection=False)
             print(f"{getTimeStamp()} >> Reciprocal Connection Successful!")

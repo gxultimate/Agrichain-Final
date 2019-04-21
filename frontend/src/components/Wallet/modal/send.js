@@ -18,6 +18,7 @@ import "ant-design-draggable-modal/dist/index.css";
 import "./modal.css";
 const FormItem = Form.Item;
 const InputGroup = Input.Group;
+const { TextArea } = Input;
 class SendModal extends Component {
   state = {
     click: false
@@ -53,7 +54,7 @@ class SendModal extends Component {
                   <span style={{ marginRight: "20vh" }}>Wallet Balance</span>
                 </Col>
                 <Col span={12}>
-                  <span style={{ marginRight: "31.5vh" }}>Amount</span>
+                  <span style={{ marginRight: "28vh" }}>Amount</span>
                 </Col>
               </Row>
               <InputGroup size="large" compact>
@@ -107,6 +108,15 @@ class SendModal extends Component {
                     recipientWalletAddress.target.value
                   );
                 }}
+              />
+            </FormItem>
+            <FormItem style={{ textAlign: "center" }}>
+              <TextArea
+                onChange={data => {
+                  currentWallet.setProperty("data", data.target.value);
+                }}
+                placeholder="What is it for?"
+                style={{ width: "83%" }}
               />
             </FormItem>
           </FormItem>
