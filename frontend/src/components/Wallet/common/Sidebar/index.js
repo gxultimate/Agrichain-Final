@@ -46,7 +46,7 @@ class Sidebar extends Component {
         >
           <Menu.Item
             key="1"
-            style={{ marginTop: "7.5vh" }}
+            style={{ marginTop: "6.2vh" }}
             onClick={this.handleEventWallet}
           >
             <Icon type="wallet" />

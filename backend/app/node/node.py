@@ -65,7 +65,7 @@ def handleMessage():
         date = str(getDateStamp())
         if len(peer.getServers()) > 0:
             # msg = input('Message: ')
-            msg = transaction.getValidatedTransaction(date)
+            msg = transaction.getValidatedTransactions(date)
             for server in peer.getServers():
                 sleep(2)
                 server.send(msg)

@@ -47,17 +47,6 @@ def extract_public_key_and_address(private_key):
     return public_key_compressed, sender_address
 
 
-# def check_value_for_transaction_fee(amount):
-#     if amount >= 1:
-#         return .005
-#     elif amount >= 0.5 and amount <= 0.99:
-#         return .003
-#     elif amount >= 0.01 and amount <= 0.04:
-#         return .002
-#     else:
-#         return .001
-
-
 def getDateStamp():
     currentDT = datetime.datetime.now()
     return currentDT.strftime('%Y-%m-%d')
@@ -68,7 +57,7 @@ def getTimeStamp():
     return currentDT.strftime("%H:%M:%S")
 
 
-@wallet.route('/sendtransaction', methods=['POST', 'GET'])
+@wallet.route('/sendTransaction', methods=['POST', 'GET'])
 @cross_origin()
 def sendTransaction():
 
@@ -91,16 +80,18 @@ def sendTransaction():
     transaction_fee = 0.3125
 
     transaction = {
-        'from': parsedSigningKey,
+        'sender': parsedSigningKey,
+        'senderAddress': parsedAddress,
         'to': parsedRecipientAddress,
         'amount': parsedAmount,
         'dateCreated': getDateStamp(),
         'hourCreated': getTimeStamp(),
         'transactionFee': transaction_fee,
-        'data': parsedData}
+        'data': parsedData
+
+    }
 
     validTransaction = Transaction()
-    # validTransaction.addValidatedTransactions(transaction)
 
     json_encoder = json.JSONEncoder(separators=(',', ':'))
     trans_json = json_encoder.encode(transaction)
@@ -120,11 +111,29 @@ def sendTransaction():
     pub_key = private_key_to_public_key(sender_private_key)
     valid = verify(generator_secp256k1, pub_key, trans_hash, trans_signature)
     print("is signature valid? " + str(valid))
-
-    return validTransaction.addValidatedTransactions(transaction)
+    if valid == True:
+        return validTransaction.addValidatedTransaction(transaction)
+    else:
+        return jsonify({'status': False})
 
 
 @wallet.route('/checkbalance', methods=['POST', 'GET'])
 @cross_origin()
 def checkBalance():
     return jsonify({'message': 'checkBalanceWorks'})
+
+
+@wallet.route("/getTransactions", methods=["GET", "POST"])
+@cross_origin()
+def getTransaction():
+
+    data = request.data
+    parsed = json.loads(data.decode())
+    parsedBody = parsed['body']
+    parsedSenderWallet = parsedBody['walletAddress']
+    # print(str(parsedBody))
+    # # print(str(parsedBody))
+    # return str(parsedBody)
+    transaction = Transaction()
+
+    return transaction.getTransactions(parsedSenderWallet)

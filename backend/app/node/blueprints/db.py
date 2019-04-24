@@ -1,8 +1,8 @@
 import tasho
 from flask import jsonify
 from peer_lib import getTimeStamp, getDateStamp
-
-
+from unqlite import UnQLite
+from tinydb import TinyDB, Query
 # class Address:
 
 #     def addNewAddress(_self, _address):
@@ -32,28 +32,108 @@ from peer_lib import getTimeStamp, getDateStamp
 
 class Transaction:
 
-    def addValidatedTransactions(self, _transaction):
+    def addValidatedTransaction(self, _transaction):
 
-        db = tasho.Database.open("./walletTransactions")
-        tbl_transactions = db.table['walletTransactions']
-        _date = str(getDateStamp())
-        try:
+        # db = tasho.Database.open("./walletTransactions")
+        # tbl_transactions = db.table['walletTransactions']\
 
-            tbl_transactions.insert(_date, _transaction)
-            search = tbl_transactions.get(_date)
-            return jsonify({'status': search.dict})
-
-        except:
-            return jsonify({'status': False})
-
-    def getValidatedTransaction(_self, _date):
-
-        db = tasho.Database.open("./walletTransactions")
-        tbl_transactions = db.table['walletTransactions']
         # _date = str(getDateStamp())
-        search = tbl_transactions.get(_date)
+        # try:
 
-        try:
-            return str(search.dict)
-        except:
-            return jsonify({'status': False})
+        #     tbl_transactions.insert(_date, _transaction)
+        #     search = tbl_transactions.get(_date)
+        #     return jsonify({'status': search.dict})
+
+        # except:
+        #     return jsonify({'status': False})
+        # db = UnQLite()
+        # transaction = db.collection("transactions")
+
+        # try:
+        #     transaction.store(_transaction)
+
+        #     print("printing", transaction.fetch(0))
+        #     print("printing", transaction.fetch(1))
+        #     return str(transaction.exists())
+        # except:
+        #     return jsonify({'status': False})
+
+        db = TinyDB('./wallet.db')
+        date = getDateStamp()
+        db.insert(_transaction)
+        transaction = Query()
+
+        trans = db.search(transaction.dateCreated == date)
+        return str(trans)
+
+    def getValidatedTransactions(_self, _date):
+
+        # db = tasho.Database.open("./walletTransactions")
+        # tbl_transactions = db.table['walletTransactions']
+
+        # search = tbl_transactions.get(_date)
+
+        # try:
+        #     if search != None:
+        #         return str(search.dict)
+        #     else:
+        #         return str('No Transaction')
+        # except:
+        #     return jsonify({'status': False})
+
+        # db = UnQLite()
+        # date = getDateStamp()
+        # transaction = db.collection("transactions")
+        # try:
+        #     results = {'1': transaction.fetch(1), '2': transaction.fetch(0)}
+
+        #     # results = transaction.filter(
+        #     #     lambda obj: obj['dateCreated'].startswith(f'{date}'))
+        #     return jsonify(results)
+        # except:
+        #     return jsonify({'status': False})
+
+        db = TinyDB('./wallet.db')
+        date = getDateStamp()
+        transaction = Query()
+
+        trans = db.search(transaction.dateCreated == date)
+        return str(trans)
+
+    def getTransactions(_self, _senderWalletAddress):
+
+        # db = UnQLite()
+        # date = getDateStamp()
+        # transaction = db.collection("transactions")
+        # try:
+        #     results = {'1': transaction.fetch(1), '2': transaction.fetch(0)}
+        #     # results = transaction.filter(
+        #     #     lambda obj: obj['dateCreated'].startswith(f'{date}'))
+        #     print(results)
+        #     return str(results)
+        # except:
+        #     return jsonify({'status': False})
+
+        db = TinyDB('./wallet.db')
+        date = getDateStamp()
+        transaction = Query()
+
+        trans = db.search(transaction.senderAddress == _senderWalletAddress)
+
+        print(str(trans))
+        return jsonify(trans)
+
+        # db = tasho.Database.open("./walletTransactions")
+        # tbl_transactions = db.table['walletTransactions']
+        # _date = str(getDateStamp())
+        # search = tbl_transactions.get(_date)
+
+        # try:
+        #     if search != None:
+        #         print(search.dict)
+        #         print(search)
+        #         return jsonify(search.dict)
+        #     else:
+        #         return str('No Transaction')
+        # except:
+        #     return jsonify({'status': False})

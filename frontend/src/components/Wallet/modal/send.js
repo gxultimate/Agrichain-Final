@@ -41,7 +41,6 @@ class SendModal extends Component {
         footer={null}
         width={600}
         title={"Send AGC"}
-        //   style={{}}
       >
         <Form className="regForm ::-webkit-scrollbar ">
           <FormItem>
@@ -54,7 +53,7 @@ class SendModal extends Component {
                   <span style={{ marginRight: "20vh" }}>Wallet Balance</span>
                 </Col>
                 <Col span={12}>
-                  <span style={{ marginRight: "28vh" }}>Amount</span>
+                  <span style={{ marginRight: "26vh" }}>Amount</span>
                 </Col>
               </Row>
               <InputGroup size="large" compact>

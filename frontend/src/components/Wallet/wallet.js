@@ -16,7 +16,7 @@ import { withRouter } from "react-router-dom";
 import SendModal from "./modal/send";
 import RequestModal from "./modal/request";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-
+import TransactionTable from "./transactionTable";
 const TabPane = Tabs.TabPane;
 const ButtonGroup = Button.Group;
 function callback(key) {
@@ -76,7 +76,7 @@ class WalletForm extends Component {
                 <Input
                   id="wallet"
                   value={`${walletAddr}`}
-                  readOnlywal
+             
                   style={{ marginBottom: "4vh" }}
                   addonAfter={
                     <CopyToClipboard text={`${walletAddr}`}>
@@ -140,11 +140,10 @@ class WalletForm extends Component {
               </ButtonGroup>
             </Card>
           </Col>
-          <Col span={16} style={{ marginLeft: "4vh", height: "50vh" }}>
+          <Col span={16} style={{ marginLeft: "5vh", height: "50vh" }}>
             <Tabs defaultActiveKey="1" onChange={callback}>
               <TabPane tab="Transaction History" key="1">
-                {" "}
-                Content of Tab 1{" "}
+                <TransactionTable />
               </TabPane>
               <TabPane tab="Request History" key="2">
                 {" "}

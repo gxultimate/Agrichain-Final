@@ -41,7 +41,6 @@ class User:
             if search['userName'] is not None and search['password'] is not None:
                 userData = search.dict
                 return jsonify(userData)
-                # return str(search['password'])
             else:
                 return "Failed"
 
@@ -55,18 +54,9 @@ class User:
         try:
             if len(search['userName']) != 0:
                 search['password'] = _npassword
+                search.save()
 
                 return "Success"
 
         except:
             return "Failed"
-
-    def checkName(self, _fullname):
-        db = TinyDB('./data/userCredential.dat')
-        try:
-            if len(db.search(where('fullName') == _fullname)) >= 1:
-                return "Sucess"
-            else:
-                return "Failed in if"
-        except:
-            return 'Failed'

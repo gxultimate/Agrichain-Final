@@ -18,18 +18,18 @@ class UserStore {
   isLoggedIn = false;
   walletAddress = this.cookies.get("walletAddress");
   isValid = false;
+  listOfTransaction = undefined;
+
   constructor(api) {
     this.api = api;
+    setInterval(() => {
+      this.getTransaction();
+    }, 3000);
   }
 
   registerUser = () => {
     return this.api.register(this.user).then(resp => {
-      //   // if (resp.data !== "False") {
       console.log(resp.data);
-      //   //   this.isValid = !this.isValid;
-      //   // } else {
-      //   //   this.isValid = this.isValid;
-      //   // }
     });
   };
 
@@ -81,6 +81,22 @@ class UserStore {
   sendTransaction = () => {
     this.api.sendtransaction(this.currentWallet);
   };
+
+  getTransaction = () => {
+    return new Promise((resolve, reject) => {
+      this.api.gettransaction(this.cookies.get("userData")).then(resp => {
+        this.listOfTransaction = resp.data;
+        // console.log(resp.data);
+        // console.log(this.listOfTransaction);
+
+        if (resp.data !== "") {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  };
 }
 
 decorate(UserStore, {
@@ -97,7 +113,9 @@ decorate(UserStore, {
   checkName: action,
   loginUser: action,
   forgotPasswordUser: action,
-  sendTransaction: action
+  sendTransaction: action,
+  getTransaction: action,
+  listOfTransaction: observable
 });
 
 export default UserStore;

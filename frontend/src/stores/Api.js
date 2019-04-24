@@ -39,7 +39,7 @@ class Api {
 
   sendtransaction = data => {
     this.walletapi
-      .post("sendtransaction", {
+      .post("sendTransaction", {
         mode: "cors",
         body: data
       })
@@ -50,6 +50,13 @@ class Api {
         console.log(error);
       });
   };
+
+  gettransaction = data => {
+    return this.walletapi.post("getTransactions", {
+      mode: "cors",
+      body: data
+    });
+  };
 }
 
 decorate(Api, {
@@ -57,7 +64,8 @@ decorate(Api, {
   forgotPass: action,
   register: action,
   user: observable,
-  sendtransaction: action
+  sendtransaction: action,
+  gettransaction: action
 });
 
 export default Api;
