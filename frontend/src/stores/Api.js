@@ -57,6 +57,13 @@ class Api {
       body: data
     });
   };
+
+  getbalance = data => {
+    return this.walletapi.post("getBalance", {
+      mode: "cors",
+      body: data
+    });
+  };
 }
 
 decorate(Api, {
@@ -65,7 +72,8 @@ decorate(Api, {
   register: action,
   user: observable,
   sendtransaction: action,
-  gettransaction: action
+  gettransaction: action,
+  getbalance: action
 });
 
 export default Api;

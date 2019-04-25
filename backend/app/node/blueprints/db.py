@@ -102,18 +102,6 @@ class Transaction:
 
     def getTransactions(_self, _senderWalletAddress):
 
-        # db = UnQLite()
-        # date = getDateStamp()
-        # transaction = db.collection("transactions")
-        # try:
-        #     results = {'1': transaction.fetch(1), '2': transaction.fetch(0)}
-        #     # results = transaction.filter(
-        #     #     lambda obj: obj['dateCreated'].startswith(f'{date}'))
-        #     print(results)
-        #     return str(results)
-        # except:
-        #     return jsonify({'status': False})
-
         db = TinyDB('./wallet.db')
         date = getDateStamp()
         transaction = Query()
@@ -123,17 +111,19 @@ class Transaction:
         print(str(trans))
         return jsonify(trans)
 
-        # db = tasho.Database.open("./walletTransactions")
-        # tbl_transactions = db.table['walletTransactions']
-        # _date = str(getDateStamp())
-        # search = tbl_transactions.get(_date)
+    def getBalance(_self, _senderWalletAddress):
 
-        # try:
-        #     if search != None:
-        #         print(search.dict)
-        #         print(search)
-        #         return jsonify(search.dict)
-        #     else:
-        #         return str('No Transaction')
-        # except:
-        #     return jsonify({'status': False})
+        db = TinyDB('./wallet.db')
+        date = getDateStamp()
+        transaction = Query()
+        userBalance = 0
+
+        transaction = db.search(
+            transaction.senderAddress == _senderWalletAddress)
+
+        for trans in transaction:
+            if trans['amount'] != "":
+                userBalance += int(trans['amount'])
+        print(("myTrans", trans))
+        print(userBalance)
+        return(jsonify({'balance': userBalance}))

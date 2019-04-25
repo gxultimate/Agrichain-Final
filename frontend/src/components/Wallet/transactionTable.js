@@ -1,17 +1,5 @@
 import React, { Component } from "react";
-import {
-  Button,
-  Layout,
-  Modal,
-  Input,
-  Form,
-  InputNumber,
-  List,
-  Row,
-  Col,
-  Icon,
-  Table
-} from "antd";
+import { Button, Layout, Modal, Input, Form, Table } from "antd";
 import { inject, observer } from "mobx-react";
 
 class TransactionTable extends Component {
@@ -24,12 +12,12 @@ class TransactionTable extends Component {
       {
         title: "Sender Address",
         dataIndex: "senderAddress",
-        width: "10%"
+        width: "8%"
       },
       {
         title: "Date",
         dataIndex: "dateCreated",
-        width: "10%"
+        width: "18%"
       },
       {
         title: "Recipient Address",
@@ -39,7 +27,7 @@ class TransactionTable extends Component {
       {
         title: "Amount",
         dataIndex: "amount",
-        width: "10%"
+        width: "5%"
       },
       {
         title: "Transaction Fee",
@@ -55,7 +43,7 @@ class TransactionTable extends Component {
     ];
 
     return (
-      <Layout width="50%">
+      <Layout width="100%">
         <Table
           columns={columns}
           dataSource={listOfTransaction}

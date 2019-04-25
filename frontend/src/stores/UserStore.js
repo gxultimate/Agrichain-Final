@@ -19,11 +19,13 @@ class UserStore {
   walletAddress = this.cookies.get("walletAddress");
   isValid = false;
   listOfTransaction = undefined;
+  balance = undefined;
 
   constructor(api) {
     this.api = api;
     setInterval(() => {
       this.getTransaction();
+      this.getBalance();
     }, 3000);
   }
 
@@ -86,7 +88,24 @@ class UserStore {
     return new Promise((resolve, reject) => {
       this.api.gettransaction(this.cookies.get("userData")).then(resp => {
         this.listOfTransaction = resp.data;
+
         // console.log(resp.data);
+        // console.log(this.listOfTransaction);
+
+        if (resp.data !== "") {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  };
+
+  getBalance = () => {
+    return new Promise((resolve, reject) => {
+      this.api.getbalance(this.cookies.get("userData")).then(resp => {
+        this.balance = resp.data.balance;
+        console.log(resp.data.balance);
         // console.log(this.listOfTransaction);
 
         if (resp.data !== "") {
@@ -115,7 +134,8 @@ decorate(UserStore, {
   forgotPasswordUser: action,
   sendTransaction: action,
   getTransaction: action,
-  listOfTransaction: observable
+  listOfTransaction: observable,
+  balance: observable
 });
 
 export default UserStore;

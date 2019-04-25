@@ -51,7 +51,7 @@ class WalletForm extends Component {
 
   render() {
     let {
-      userStore: { currentUser, thing, cookies }
+      userStore: { currentUser, thing, cookies, balance }
     } = this.props;
 
     const cookieData = cookies.get("userData");
@@ -76,7 +76,6 @@ class WalletForm extends Component {
                 <Input
                   id="wallet"
                   value={`${walletAddr}`}
-             
                   style={{ marginBottom: "4vh" }}
                   addonAfter={
                     <CopyToClipboard text={`${walletAddr}`}>
@@ -121,7 +120,7 @@ class WalletForm extends Component {
               bordered={false}
               style={{ height: "80vh" }}
             >
-              <Card style={{ height: "20vh" }}> AGC </Card>
+              <Card style={{ height: "20vh" }}> {balance} AGC </Card>
               <ButtonGroup size="large" style={{ marginTop: "4vh" }}>
                 <Button
                   span={6}

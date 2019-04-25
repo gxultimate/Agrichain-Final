@@ -25,7 +25,7 @@ class SendModal extends Component {
   };
 
   render() {
-    const data = ["Transfer Fee ", "Recipient will Receive"];
+    const data = ["Transfer Fee  0.3125 ", "Recipient will Receive "];
 
     let {
       userStore: { currentWallet, sendTransaction, cookies }

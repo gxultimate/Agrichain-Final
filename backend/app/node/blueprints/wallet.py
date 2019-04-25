@@ -137,3 +137,17 @@ def getTransaction():
     transaction = Transaction()
 
     return transaction.getTransactions(parsedSenderWallet)
+
+
+@wallet.route("/getBalance", methods=["GET", "POST"])
+@cross_origin()
+def getBalance():
+
+    data = request.data
+    parsed = json.loads(data.decode())
+    parsedBody = parsed['body']
+    parsedSenderWallet = parsedBody['walletAddress']
+
+    transaction = Transaction()
+
+    return transaction.getBalance(parsedSenderWallet)
