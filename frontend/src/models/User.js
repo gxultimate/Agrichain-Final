@@ -1,36 +1,62 @@
 import { action, observable, decorate } from "mobx";
 
 import Model from "./Model";
-import Cookie from "mobx-cookie";
+
 class User extends Model {
   constructor(props) {
     const defaults = {
-      _id: 0,
+      cooperativeID: 0,
       fullName: "",
       coopName: "",
       userName: "",
       passWord: "",
       rpassWord: "",
-      currAddress: "",
+      permanentsAddress: "",
       contactNum: 0,
+      contactNoOffice: "",
+      residence: "",
       walletAddress: "",
-      isValid: ""
+      isValid: "",
+      senderWalletAddress: "",
+      senderPrivateKey: "",
+      senderPublicKey: "",
+      membershipType: "",
+      occupation: "",
+      placeOfAssignment: "",
+      position: "",
+      monthlyBasicSalary: "",
+      avenueMonthlyTakeHomePay: "",
+      totalMonthlyStatutoryDeductions: "",
+      totalMonthlyNonStatutoryDeductions: "",
+      response: ""
     };
     super({ ...defaults, ...props });
   }
 }
 decorate(User, {
-  _id: observable,
+  cooperativeID: observable,
   fullName: observable,
   coopName: observable,
   userName: observable,
   passWord: observable,
   rpassWord: observable,
-  currAddress: observable,
+  currentAddress: observable,
   contactNum: observable,
   response: observable,
   walletAddress: observable,
   isValid: observable,
+  senderWalletAddress: observable,
+  senderPrivateKey: observable,
+  senderPublicKey: observable,
+  membershipType: observable,
+  occupation: observable,
+  placeOfAssignment: observable,
+  position: observable,
+  monthlyBasicSalary: observable,
+  avenueMonthlyTakeHomePay: observable,
+  totalMonthlyStatutoryDeductions: observable,
+  totalMonthlyNonStatutoryDeductions: observable,
+  response: observable,
   reset: action
 });
 

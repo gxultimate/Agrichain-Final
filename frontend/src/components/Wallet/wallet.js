@@ -120,7 +120,16 @@ class WalletForm extends Component {
               bordered={false}
               style={{ height: "80vh" }}
             >
-              <Card style={{ height: "20vh" }}> {balance} AGC </Card>
+              <Card
+                style={{
+                  height: "20vh",
+                  fontSize: "4vh",
+                  textAlign: "center"
+                }}
+              >
+                {" "}
+                {balance} AGC{" "}
+              </Card>
               <ButtonGroup size="large" style={{ marginTop: "4vh" }}>
                 <Button
                   span={6}

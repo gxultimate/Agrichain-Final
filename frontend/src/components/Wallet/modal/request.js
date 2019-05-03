@@ -2,8 +2,6 @@ import React, { Component, useCallback, useState } from "react";
 
 import { Button, Layout, Modal, Input, Form, InputNumber, List } from "antd";
 
-import "ant-design-draggable-modal/dist/index.css";
-
 const FormItem = Form.Item;
 class RequestModal extends Component {
   render() {

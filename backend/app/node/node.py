@@ -3,7 +3,8 @@ from peer_lib import Peer, getTimeStamp, getDateStamp
 from socketIO_client import SocketIO as socks_c, LoggingNamespace
 from time import sleep
 import os
-from flask import Flask, jsonify, request, blueprints
+
+from flask import Flask, jsonify, request, blueprints, session
 from flask_socketio import SocketIO, send, emit
 from flask import Flask, request, jsonify
 from blueprints import wallet
@@ -11,8 +12,11 @@ from flask_cors import CORS, cross_origin
 # from werkzeug.debug import DebuggedApplication
 import asyncio
 from blueprints.db import Transaction
+from werkzeug.utils import secure_filename
+UPLOAD_FOLDER = './data'
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'admin'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # app.debug = True
 # app.wsgi_app = DebuggedApplication(app.wsgi_app, evalex=True)
 app.register_blueprint(wallet.wallet)
@@ -26,7 +30,7 @@ peer = Peer()
 def startServer(ip, port, branch):
     sleep(1)
     print(f"{getTimeStamp()} >> Starting Server...")
-    sleep(2)
+    sleep(1)
     print(f"{getTimeStamp()} >> Server started in {branch}")
     sleep(1)
     print(f"{getTimeStamp()} >> Waiting for Connection ...")
@@ -65,15 +69,42 @@ def handleMessage():
         date = str(getDateStamp())
         if len(peer.getServers()) > 0:
             # msg = input('Message: ')
-            msg = transaction.getValidatedTransactions(date)
+            msg = transaction.getPendingTransaction(date)
+
             for server in peer.getServers():
                 sleep(2)
-                server.send(msg)
+                server.send(transaction.addNewPendingTransaction(msg, date))
+
+
+@app.route("/uploadFiles", methods=['POST', 'GET'])
+@cross_origin()
+def uploadFiles():
+
+    target = os.path.join(UPLOAD_FOLDER, 'test_docs')
+    if not os.path.isdir(target):
+        os.mkdir(target)
+
+    # if 'file' not in request.file:
+    #     return jsonify({'no': "NO FILE"})
+    file = request.files['file']
+    filename = secure_filename(file.filename)
+    destination = "/".join([target, filename])
+    file.save(destination)
+    session['uploadFilepath'] = destination
+
+    print(filename)
+    # else:
+    #     # file = request.files['file']
+    #     return jsonify({'status': True})
+    # filename = secure_filename(file.name)
+
+    # file.save(filename)
+    # response = "success"
+    return jsonify({'name': filename})
 
 
 # async def messages():
 #     await asyncio.gather(handleMessage())
-
 if __name__ == "__main__":
 
     branch = input('Cooperative Branch: ')

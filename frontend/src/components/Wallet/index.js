@@ -13,6 +13,11 @@ import WalletForm from "./wallet";
 import CashInForm from "./cashIn";
 import CashOutForm from "./cashOut";
 import PayBillsForm from "./pay";
+import AgriculturalLoan from "./agriculturalLoan";
+import EmergencyLoan from "./emergencyLoan";
+import LivelihoodLoan from "./liveliHoodLoan";
+import ShortTermLoan from "./shortTermLoan";
+
 const { Content } = Layout;
 const SubMenu = Menu.SubMenu;
 
@@ -39,12 +44,20 @@ class Wallet extends Component {
                   <Route exact path="/wallet" render={() => <WalletForm />} />
                   <Route path="/wallet/cashin" render={() => <CashInForm />} />
                   <Route
-                    path="/wallet/cashout"
-                    render={() => <CashOutForm />}
+                    path="/wallet/agricultural"
+                    render={() => <AgriculturalLoan />}
                   />
                   <Route
-                    path="/wallet/paybill"
-                    render={() => <PayBillsForm />}
+                    path="/wallet/emergency"
+                    render={() => <EmergencyLoan />}
+                  />
+                  <Route
+                    path="/wallet/livelihood"
+                    render={() => <LivelihoodLoan />}
+                  />
+                  <Route
+                    path="/wallet/short-term"
+                    render={() => <ShortTermLoan />}
                   />
                 </Switch>
               </div>

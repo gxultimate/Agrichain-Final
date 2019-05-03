@@ -14,7 +14,6 @@ import {
 } from "antd";
 import { inject, observer } from "mobx-react";
 
-import "ant-design-draggable-modal/dist/index.css";
 import "./modal.css";
 const FormItem = Form.Item;
 const InputGroup = Input.Group;
@@ -28,12 +27,23 @@ class SendModal extends Component {
     const data = ["Transfer Fee  0.3125 ", "Recipient will Receive "];
 
     let {
-      userStore: { currentWallet, sendTransaction, cookies }
+      userStore: {
+        currentWallet,
+        sendTransaction,
+        cookies,
+        balance,
+        receiveTransactions
+      }
     } = this.props;
     const cookieData = cookies.get("userData");
     const walletAddr = cookieData["walletAddress"];
     const privateKey = cookieData["privateKey"];
     const publicKey = cookieData["publicKey"];
+
+    const myBalance = balance;
+    const AGC = "AGC ";
+    const balanceAGC = AGC.concat(myBalance);
+
     return (
       <Modal
         visible={this.props.visible}
@@ -61,15 +71,19 @@ class SendModal extends Component {
                   <Col span={12}>
                     <Input
                       disabled
-                      style={{ width: "100%" }}
+                      value={balanceAGC}
+                      style={{
+                        width: "100%",
+                        textAlign: "center"
+                      }}
                       addonBefore={
                         <span>
                           <Icon type="wallet" />
                         </span>
                       }
-                      readOnly
                     />
                   </Col>
+
                   <Col span={12}>
                     <Input
                       size="large"
@@ -121,14 +135,6 @@ class SendModal extends Component {
           </FormItem>
           <FormItem>
             <FormItem>
-              <FormItem>
-                <List
-                  size="small"
-                  style={{ marginLeft: "9vh", width: "80%" }}
-                  dataSource={data}
-                  renderItem={item => <List.Item>{item}</List.Item>}
-                />
-              </FormItem>
               <FormItem style={{ textAlign: "center", marginBottom: "0px" }}>
                 <Button
                   size="large"
@@ -136,6 +142,7 @@ class SendModal extends Component {
                   type="primary"
                   onClick={() => {
                     sendTransaction();
+                    receiveTransactions();
                     currentWallet.setProperty(
                       "senderWalletAddress",
                       walletAddr
@@ -143,9 +150,11 @@ class SendModal extends Component {
 
                     currentWallet.setProperty("senderPrivateKey", privateKey);
                     currentWallet.setProperty("senderPublicKey", publicKey);
+                    currentWallet.setProperty("balance", balance);
+                    // currentWallet.setProperty("balance",)
                   }}
                 >
-                  Continue
+                  Confirm
                 </Button>
               </FormItem>
             </FormItem>

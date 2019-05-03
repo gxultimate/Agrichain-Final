@@ -10,10 +10,6 @@ class Headerbar extends Component {
   };
 
   handleLogout = () => {
-    let {
-      userStore: { cookies }
-    } = this.props;
-    cookies.remove("userData");
     window.location.href = "/";
   };
 
@@ -30,9 +26,24 @@ class Headerbar extends Component {
       <Menu
         theme="dark"
         onClick={this.handleClick}
+        style={{ height: "5.5vh " }}
         mode="horizontal"
-        style={{}}
       >
+        <Menu.Item style={{ float: "left" }} key="1">
+          <span>
+            <Icon type="file-exclamation" />
+          </span>
+          Pending Loan Request
+        </Menu.Item>
+        <Menu.Item style={{ float: "left" }} key="2">
+          <span>
+            <span>
+              {" "}
+              <Icon type="file-done" />
+            </span>
+          </span>
+          Approved Loan Request
+        </Menu.Item>
         <SubMenu
           key="sub1"
           style={{ float: "right", marginRight: "2vh" }}

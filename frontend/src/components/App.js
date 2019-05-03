@@ -8,6 +8,7 @@ import { Provider } from "mobx-react";
 // import Home from "./Home";
 import Login from "./Login";
 import Wallet from "./Wallet";
+import LoanPage from "./Wallet/Loan";
 
 // Store Init
 
@@ -31,6 +32,7 @@ class App extends Component {
           <Layout>
             <Route exact path="/" component={Login} />
             <Route path="/wallet" component={Wallet} />
+            <Route path="/loan" component={LoanPage} />
           </Layout>
 
           {/* JUST ADD Additional Routes here */}

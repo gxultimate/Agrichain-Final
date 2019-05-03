@@ -8,7 +8,7 @@ from flask import jsonify
 class User:
 
     # adding user
-    def addUser(self, walletAddr, _privateKey, _publicKey, _name, _coop, _address, _contact, _username, _pass, _rpass):
+    def addUser(self, cooperativeID, walletAddr, _privateKey, _publicKey, _name, _coop, _address, _contact, _username, _pass, _rpass,  _contactNoOffice, _residence, _occupation,  _membershipType, _placeOfAssignment, _position, _monthlyBasicSalary, _avenueMonthlyTakeHomePay,  _totalMonthlyStatutoryDeductions, _totalMonthlyNonStatutoryDeductions,):
 
         db = tasho.Database.open('./data/walletUser')
         tbl_user = db.table['walletUser']
@@ -19,15 +19,21 @@ class User:
             search = tbl_user.get(_username)
             if search is not None:
 
-                return str(_username)
+                return jsonify({'status': False})
             else:
-
                 tbl_user.insert(_username, {'id': _hash.hexdigest(), 'privateKey': _privateKey, 'publicKey': _publicKey, 'walletAddress': walletAddr, 'fullName': _name, 'coopName': _coop, 'currentAddress': _address,
-                                            'contactNum':  _contact, 'userName': _username, 'password': _pass, 'repeatPassword': _rpass})
+                                            'contactNum':  _contact, 'userName': _username, 'password': _pass,
+                                            'contactNoOffice': _contactNoOffice, 'residence': _residence,
+                                            'repeatPassword': _rpass,
+                                            'membershipType': _membershipType,
+                                            'occupation': _occupation,
+                                            'placeOfAssignment': _placeOfAssignment, 'position': _position, 'monthlyBasicSalary': _monthlyBasicSalary, 'avenueMonthlyTakeHomePay': _avenueMonthlyTakeHomePay,  'totalMonthlyStatutoryDeductions': _totalMonthlyStatutoryDeductions, 'totalMonthlyNonStatutoryDeductions': _totalMonthlyNonStatutoryDeductions,
+                                            'cooperativeID': cooperativeID
+                                            })
 
-            return str('Success')
+            return jsonify({'status': True})
         except:
-            return 'Failed'
+            return jsonify({'status': False})
 
 # checking user
     def checkUser(self, _user, _pass):

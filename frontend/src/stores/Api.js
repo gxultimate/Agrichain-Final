@@ -1,10 +1,29 @@
 import axios from "axios";
 import { action, decorate, observable } from "mobx";
-
+// const ;
+// const x = 0;
+// for (x in nodes)
 class Api {
   api = axios.create({
     baseURL: "http://localhost:5000/"
   });
+
+  nodes = [3001, 3002, 3003, 3004, 3005, 3006, 3007, 3008];
+
+  connectTo = node => {
+    return axios.create({
+      baseURL: "http://localhost:" + node + ""
+    });
+  };
+
+  // getbalance = data => {
+  //   this.nodes.forEach(node => {
+  //     return axios.post("http://localhost:" + node + "/getBalance", {
+  //       mode: "cors",
+  //       body: data
+  //     });
+  //   });
+  // };
 
   walletapi = axios.create({
     baseURL: "http://localhost:3001/"
@@ -64,6 +83,44 @@ class Api {
       body: data
     });
   };
+
+  receivetransactions = data => {
+    return this.walletapi.post("receiveTransaction", {
+      mode: "cors",
+      body: data
+    });
+  };
+
+  uploadfiles = file => {
+    return this.walletapi.post("uploadFiles", {
+      mode: "cors",
+      body: file
+    });
+  };
+
+  sendloanrequest = (data, loan) => {
+    return this.walletapi.post("sendLoanRequest", {
+      mode: "cors",
+      body: { data: data, loan: loan }
+    });
+  };
+  // connectionLoop = data => {
+  //   let index = 3001;
+  //   const request = data => {
+  //     return axios
+  //       .post("http://localhost:" + index + "/getBalance", {
+  //         mode: "cors",
+  //         body: data
+  //       })
+  //       .then(() => {
+  //         index++;
+  //         if (index >= 3010) {
+  //           return "done";
+  //         }
+  //         return request();
+  //       });
+  //   };
+  // };
 }
 
 decorate(Api, {
@@ -73,7 +130,10 @@ decorate(Api, {
   user: observable,
   sendtransaction: action,
   gettransaction: action,
-  getbalance: action
+  getbalance: action,
+  receivetransactions: action,
+  uploadfiles: action,
+  sendloanrequest: action
 });
 
 export default Api;

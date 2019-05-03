@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify, session
 import flask_bootstrap
 from flask_socketio import SocketIO, send, emit
 from time import sleep
@@ -14,9 +14,15 @@ from data.db import User
 import json
 import ast
 import binascii
+from werkzeug.utils import secure_filename
+import os
+from random import randint
+from peer_lib import getTimeStamp, getDateStamp
+UPLOAD_FOLDER = './data'
 
 app = Flask(__name__)
 app.config['CORS_HEADERS'] = 'Content-Type'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 CORS(app)
 socketio = SocketIO(app)
 
@@ -33,6 +39,25 @@ def checksum_encode(addr_str):
         else:
             out += c
     return '0x' + out
+
+
+def random_with_N_digits(n):
+    range_start = 10**(n-1)
+    range_end = (10**n)-1
+    return randint(range_start, range_end)
+
+
+def getCooperativeID():
+
+    date = str(getDateStamp())
+
+    middle = random_with_N_digits(4)
+    end = random_with_N_digits(2)
+
+    start = date[2:4]
+
+    id = f"{start} - {middle} - {end}"
+    return id
 
 
 @app.route('/login', methods=['POST', 'GET'])
@@ -75,6 +100,7 @@ def checkname():
 def register():
 
     wallet = generateWallet()
+    cooperativeID = getCooperativeID()
     walletaddr = eval(wallet.data)
     privateKey = walletaddr['privateKey']
     publicKey = walletaddr['publicKey']
@@ -85,15 +111,36 @@ def register():
     parsedBody = parsed['body']
     parsedFullname = parsedBody['fullName']
     parsedCoopname = parsedBody['coopName']
-    parsedCurraddress = parsedBody['currAddress']
+    parsedCurraddress = parsedBody['currentAddress']
     parsedContactnum = parsedBody['contactNum']
     parsedUsername = parsedBody['userName']
     parsedPassword = parsedBody['passWord']
     parsedRpassword = parsedBody['rpassWord']
+    parsedContactNumOffice = parsedBody['contactNoOffice']
+    parsedResidence = parsedBody['residence']
+    parsedMembershipType = parsedBody['membershipType']
+    parsedOccupation = parsedBody['occupation']
+    parsedPlaceOfAssignment = parsedBody['placeOfAssignment']
+    parsedPosition = parsedBody['position']
+    parsedMonthlyBasicSalary = parsedBody['monthlyBasicSalary']
+    parsedAvenueMonthlyTakeHomePay = parsedBody['avenueMonthlyTakeHomePay']
+    parsedTotalMonthlyStatutoryDeductions = parsedBody['totalMonthlyStatutoryDeductions']
+    parsedTotalMonthlyNonStatutoryDeductions = parsedBody['totalMonthlyNonStatutoryDeductions']
 
+    print(parsedBody)
     try:
         user = User()
-        return user.addUser(walletAddress, publicKey, privateKey, parsedFullname, parsedCoopname, parsedCurraddress, parsedContactnum, parsedUsername, parsedPassword, parsedRpassword)
+        return user.addUser(cooperativeID, walletAddress, publicKey, privateKey, parsedFullname, parsedCoopname, parsedCurraddress, parsedContactnum, parsedUsername, parsedPassword, parsedRpassword,
+                            parsedContactNumOffice,
+                            parsedResidence,
+                            parsedOccupation,
+                            parsedMembershipType,
+                            parsedPlaceOfAssignment,
+                            parsedPosition,
+                            parsedMonthlyBasicSalary,
+                            parsedAvenueMonthlyTakeHomePay,
+                            parsedTotalMonthlyStatutoryDeductions,
+                            parsedTotalMonthlyNonStatutoryDeductions)
     except ValueError:
         return jsonify({'status': 'failed'})
 
@@ -111,6 +158,32 @@ def changePass():
         return user.changePassword(parsedBody['userName'], parsedBody['passWord'])
     except ValueError:
         return jsonify({'status': 'failed'})
+
+
+# @app.route("/uploadFiles", methods=['POST', 'GET'])
+# @cross_origin()
+# def uploadFiles():
+#     target = os.path.join(UPLOAD_FOLDER, 'test_docs')
+#     if not os.path.isdir(target):
+#         os.mkdir(target)
+
+#     # if 'file' not in request.file:
+#     #     return jsonify({'no': "NO FILE"})
+#     file = request.files['file']
+#     filename = secure_filename(file.filename)
+#     destination = "/".join([target, filename])
+#     file.save(destination)
+#     session['uploadFilepath'] = destination
+
+#     print(filename)
+#     # else:
+#     #     # file = request.files['file']
+#     #     return jsonify({'status': True})
+#     # filename = secure_filename(file.name)
+
+#     # file.save(filename)
+#     # response = "success"
+#     return jsonify({'name': filename})
 
 
 @app.route('/generateWallet', methods=['POST', 'GET'])
@@ -147,4 +220,5 @@ def generateWallet():
 
 
 if __name__ == '__main__':
+    app.secret_key = os.urandom(24)
     app.run(debug=True)
