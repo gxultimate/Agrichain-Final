@@ -20,6 +20,7 @@ from random import randint
 from peer_lib import getTimeStamp, getDateStamp
 UPLOAD_FOLDER = './data'
 
+
 app = Flask(__name__)
 app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -111,7 +112,7 @@ def register():
     parsedBody = parsed['body']
     parsedFullname = parsedBody['fullName']
     parsedCoopname = parsedBody['coopName']
-    parsedCurraddress = parsedBody['currentAddress']
+    parsedCurraddress = parsedBody['permanentsAddress']
     parsedContactnum = parsedBody['contactNum']
     parsedUsername = parsedBody['userName']
     parsedPassword = parsedBody['passWord']
@@ -126,7 +127,7 @@ def register():
     parsedAvenueMonthlyTakeHomePay = parsedBody['avenueMonthlyTakeHomePay']
     parsedTotalMonthlyStatutoryDeductions = parsedBody['totalMonthlyStatutoryDeductions']
     parsedTotalMonthlyNonStatutoryDeductions = parsedBody['totalMonthlyNonStatutoryDeductions']
-
+    parsedUseRole = parsedBody['userRole']
     print(parsedBody)
     try:
         user = User()
@@ -140,7 +141,7 @@ def register():
                             parsedMonthlyBasicSalary,
                             parsedAvenueMonthlyTakeHomePay,
                             parsedTotalMonthlyStatutoryDeductions,
-                            parsedTotalMonthlyNonStatutoryDeductions)
+                            parsedTotalMonthlyNonStatutoryDeductions, parsedUseRole)
     except ValueError:
         return jsonify({'status': 'failed'})
 

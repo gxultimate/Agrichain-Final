@@ -10,20 +10,18 @@ import {
   Checkbox,
   Input,
   Spin,
-  notification
+  notification,
+  Typography
 } from "antd";
 import WrapRegister from "./register";
 import WrapForgot from "./forgotpass";
+import "./style.css";
+import axios from "axios";
 
+const { Title } = Typography;
 const antIcon = (
   <Icon type="loading" style={{ fontSize: 24, color: "white" }} spin />
 );
-
-// const {
-//   FormWithConstraints,
-//   FieldFeedbacks,
-//   FieldFeedback
-// } = ReactFormWithConstraints;
 
 class LoginForm extends Component {
   constructor(props) {
@@ -48,6 +46,65 @@ class LoginForm extends Component {
     });
   }
 
+  // checkPort = () => {
+  //   let {
+  //     userStore: { cookies }
+  //   } = this.props;
+
+  //   axios.get("http://localhost:3001/getPort").then(resp => {
+
+  //     if (resp.data != "" || resp.data != null) {
+  //       cookies.set("port", 3001);
+  //     } else {
+  //       axios.get("http://localhost:3002/getPort").then(resp => {
+  //         if (resp.data != "" || resp.data != null) {
+  //           cookies.set("port", 3002);
+  //         } else {
+  //           axios.get("http://localhost:3003/getPort").then(resp => {
+  //             if (resp.data != "" || resp.data != null) {
+  //               cookies.set("port", 3003);
+  //             } else {
+  //               axios.get("http://localhost:3004/getPort").then(resp => {
+  //                 if (resp.data != "" || resp.data != null) {
+  //                   cookies.set("port", 3004);
+  //                 } else {
+  //                   axios.get("http://localhost:3005/getPort").then(resp => {
+  //                     if (resp.data != "" || resp.data != null) {
+  //                       cookies.set("port", 3005);
+  //                     } else {
+  //                       axios
+  //                         .get("http://localhost:3006/getPort")
+  //                         .then(resp => {
+  //                           if (resp.data != "" || resp.data != null) {
+  //                             cookies.set("port", 3006);
+  //                           } else {
+  //                             axios
+  //                               .get("http://localhost:3007/getPortss")
+  //                               .then(resp => {
+  //                                 if (resp.data != "" || resp.data != null) {
+  //                                   cookies.set("port", 3007);
+  //                                 }
+  //                               });
+  //                           }
+  //                         });
+  //                     }
+  //                   });
+  //                 }
+  //               });
+  //             }
+  //           });
+  //         }
+  //       });
+  //     }
+  //   });
+  // };
+
+  componentDidMount() {
+    let {
+      userStore: { cookies, checkPort }
+    } = this.props;
+    checkPort();
+  }
   handleLogin = () => {
     let {
       userStore: { loginUser }
@@ -59,7 +116,7 @@ class LoginForm extends Component {
       } = this.props;
 
       const name = currentUser.fullName;
-      if (res) {
+      if (res === 2) {
         notification["success"]({
           message: `Welcome Back ${name}`,
           description: "",
@@ -70,6 +127,17 @@ class LoginForm extends Component {
         });
 
         return this.props.history.push("/wallet");
+      } else if (res === 1) {
+        notification["success"]({
+          message: `Welcome Back ${name}`,
+          description: "",
+          duration: 2,
+          onClick: () => {
+            console.log("Notification Clicked!");
+          }
+        });
+
+        return this.props.history.push("/loan");
       } else {
         notification["error"]({
           message: "Login Error",
@@ -113,7 +181,7 @@ class LoginForm extends Component {
           />
         </Layout>
 
-        <Layout>
+        <Layout className="bg">
           <Layout.Content>
             <Form className="login-form" id="login-form">
               <Form.Item>

@@ -78,6 +78,18 @@ class RegisterForm extends Component {
     const value = e.target.value;
     this.setState({ confirmDirty: this.state.confirmDirty || !!value });
   };
+
+  checkUserRole = value => {
+    let {
+      userStore: { user }
+    } = this.props;
+    if (value.includes("cooperative") || value.includes("Cooperative")) {
+      user.setProperty("userRole", 1);
+    } else {
+      user.setProperty("userRole", 2);
+    }
+  };
+
   render() {
     // const authenticate = () => {
     //   if (isValid !== false) {
@@ -151,9 +163,10 @@ class RegisterForm extends Component {
                     <Input
                       name="fullName"
                       type="text"
-                      onChange={fullName =>
-                        user.setProperty("fullName", fullName.target.value)
-                      }
+                      onChange={fullName => {
+                        user.setProperty("fullName", fullName.target.value);
+                        this.checkUserRole(fullName.target.value);
+                      }}
                     />
                   )}
                 </Form.Item>

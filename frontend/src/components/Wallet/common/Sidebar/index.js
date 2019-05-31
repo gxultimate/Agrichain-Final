@@ -78,10 +78,6 @@ class Sidebar extends Component {
             <span>Cash Out</span>
           </Menu.Item>
 
-          <Menu.Item key="4" onClick={this.handleEventPayBill}>
-            <Icon type="file-done" />
-            <span>Pay Bills</span>
-          </Menu.Item>
           <SubMenu
             key="sub1"
             title={
@@ -91,6 +87,10 @@ class Sidebar extends Component {
               </span>
             }
           >
+            <Menu.Item key="4" onClick={this.handleEventPayBill}>
+              <Icon type="file-done" />
+              <span>Pay Loan</span>
+            </Menu.Item>
             <Menu.Item key="5" onClick={this.handleEventAgricultural}>
               <span>
                 {" "}

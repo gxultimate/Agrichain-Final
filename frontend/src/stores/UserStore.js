@@ -23,20 +23,20 @@ class UserStore {
   walletAddress = false;
   isValid = false;
   listOfTransaction = undefined;
+  listOfLoan = undefined;
   balance = undefined;
   registerResponse = undefined;
   uploadID = [];
+  listOfUserLoan = undefined;
+  listOfAllLoan = undefined;
+  listOfAmortization = undefined;
+  loanInterest = undefined;
+  loanBalance = undefined;
+  loanPrincipal = undefined;
+  listOfAmortization = undefined;
+  loanDueDate = undefined;
   constructor(api) {
     this.api = api;
-
-    // if (this.isLoading === false) {
-    //   console.log(this.isLoading);
-    // } else {
-    setInterval(() => {
-      this.getTransaction();
-      this.getBalance();
-      console.log("ee", this.isLoading);
-    }, 5000);
   }
 
   registerUser = () => {
@@ -114,11 +114,21 @@ class UserStore {
 
         this.setCookie(data.data.fullName);
         this.isLoading = !this.isLoading;
+
         if (data.data !== "Failed" && data.data !== "FailedAgain") {
-          resolve(true);
-        } else {
-          resolve(false);
+          console.log("logindata", data.data["userRole"]);
+          if (data.data["userRole"] === 1) {
+            resolve(1);
+          } else if (
+            data.data["userRole"] === 2 ||
+            data.data["userRole"] == undefined
+          ) {
+            resolve(2);
+          } else {
+            resolve(false);
+          }
         }
+        resolve(false);
       });
     });
   };
@@ -164,7 +174,7 @@ class UserStore {
     return new Promise((resolve, reject) => {
       this.api.getbalance(this.cookies.get("userData")).then(resp => {
         this.balance = resp.data.balance;
-        console.log(resp.data.balance);
+        console.log("balance", resp.data.balance);
         // console.log(this.listOfTransaction);
 
         if (resp.data !== "") {
@@ -179,7 +189,7 @@ class UserStore {
     return new Promise((resolve, reject) => {
       this.api.receivetransactions(this.cookies.get("userData")).then(resp => {
         // this.balance = resp.data.balance;
-        // console.log(resp.data.balance);
+        console.log("recieve wallet", resp.data);
         // console.log(this.listOfTransaction);
 
         if (resp.data !== "") {
@@ -207,6 +217,7 @@ class UserStore {
       this.api
         .sendloanrequest(this.cookies.get("userData"), this.currentLoan)
         .then(resp => {
+          console.log(resp.data);
           if (resp.data !== "") {
             resolve(true);
           } else {
@@ -214,6 +225,80 @@ class UserStore {
           }
         });
     });
+  };
+
+  getLoanRequest = () => {
+    return new Promise((resolve, reject) => {
+      this.api.getloanrequest(this.cookies.get("userData")).then(resp => {
+        this.listOfUserLoan = resp.data;
+        console.log(resp.data);
+        if (resp.data !== "") {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  };
+
+  getAllLoanRequest = () => {
+    return new Promise((resolve, reject) => {
+      this.api.getallloanrequests(this.cookies.get("userData")).then(resp => {
+        this.listOfAllLoan = resp.data;
+        console.log("wow", resp.data);
+        if (resp.data !== "") {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  };
+
+  sendLoanPayment = data => {
+    return new Promise((resolve, reject) => {
+      this.api.sendloanpayment(this.currentLoan).then(resp => {
+        // this.listOfUserLoan = resp.data;
+        console.log(resp.data);
+        if (resp.data !== "") {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  };
+
+  getLoanAmortization = data => {
+    return new Promise((resolve, reject) => {
+      this.api.getloanamortization(this.cookies.get("userData")).then(resp => {
+        // this.listOfUserLoan = resp.data;
+        this.listOfAmortization = resp.data;
+
+        let len = this.listOfAmortization.length;
+
+        let balance = this.listOfAmortization[len - 1]["balance"];
+        let principal = this.listOfAmortization[len - 1]["principal"];
+        let interest = this.listOfAmortization[len - 1]["interest"];
+        let date = this.listOfAmortization[len - 1]["dueDate"];
+
+        this.loanPrincipal = principal;
+        this.loanInterest = interest;
+        this.loanBalance = balance;
+        this.loanDueDate = date;
+
+        console.log("amortization", this.listOfAmortization.length);
+        if (resp.data !== "") {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  };
+
+  checkPort = () => {
+    this.api.checkPort();
   };
 }
 
@@ -241,7 +326,20 @@ decorate(UserStore, {
   uploadID: observable,
   registerResponse: observable,
   cookiesRegister: observable,
-  sendLoanRequest: observable
+  sendLoanRequest: action,
+  getLoanRequest: action,
+  listOfUserLoan: observable,
+  sendLoanPayment: observable,
+  getAllLoanRequest: action,
+  listOfAllLoan: observable,
+  getLoanAmortization: observable,
+  listOfAmortization: observable,
+  displayAmortization: observable,
+  loanInterest: observable,
+  loanBalance: observable,
+  loanPrincipal: observable,
+  loanDueDate: observable,
+  checkPort: action
 });
 
 export default UserStore;

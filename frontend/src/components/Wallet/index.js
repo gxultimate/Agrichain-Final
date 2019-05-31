@@ -44,6 +44,10 @@ class Wallet extends Component {
                   <Route exact path="/wallet" render={() => <WalletForm />} />
                   <Route path="/wallet/cashin" render={() => <CashInForm />} />
                   <Route
+                    path="/wallet/paybill"
+                    render={() => <PayBillsForm />}
+                  />
+                  <Route
                     path="/wallet/agricultural"
                     render={() => <AgriculturalLoan />}
                   />

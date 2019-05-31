@@ -1,1 +1,1 @@
-__all__ = ['wallet']
+__all__ = ['wallet', 'node']

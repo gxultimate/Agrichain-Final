@@ -10,7 +10,8 @@ import {
   List,
   Row,
   Col,
-  Icon
+  Icon,
+  message
 } from "antd";
 import { inject, observer } from "mobx-react";
 
@@ -35,14 +36,36 @@ class SendModal extends Component {
         receiveTransactions
       }
     } = this.props;
+
     const cookieData = cookies.get("userData");
     const walletAddr = cookieData["walletAddress"];
     const privateKey = cookieData["privateKey"];
     const publicKey = cookieData["publicKey"];
+    let myBalance = 0;
 
-    const myBalance = balance;
+    if (balance === undefined) {
+      myBalance = 0;
+    } else {
+      myBalance = balance;
+    }
+
     const AGC = "AGC ";
     const balanceAGC = AGC.concat(myBalance);
+
+    // function checkBalance() {
+    //   if (myBalance > currentWallet.amount) {
+    //     const success = () => {
+    //       message.loading("Sending Transaction...", 2.5).then(() => {
+    //         message.success("Transaction Successful");
+    //         sendTransaction();
+    //       });
+    //     };
+
+    //     setTimeout(success, 2000);
+    //   } else {
+    //     message.error("Transaction Invalid");
+    //   }
+    // }
 
     return (
       <Modal
@@ -141,8 +164,8 @@ class SendModal extends Component {
                   style={{ width: "60vh" }}
                   type="primary"
                   onClick={() => {
+                    // checkBalance();
                     sendTransaction();
-                    receiveTransactions();
                     currentWallet.setProperty(
                       "senderWalletAddress",
                       walletAddr
@@ -151,6 +174,7 @@ class SendModal extends Component {
                     currentWallet.setProperty("senderPrivateKey", privateKey);
                     currentWallet.setProperty("senderPublicKey", publicKey);
                     currentWallet.setProperty("balance", balance);
+
                     // currentWallet.setProperty("balance",)
                   }}
                 >

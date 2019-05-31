@@ -1,12 +1,14 @@
 import React, { Component } from "react";
 import { Button, Layout, Modal, Input, Form, Table, Card } from "antd";
 import { inject, observer } from "mobx-react";
+import "../Login/style.css";
 import {
   BrowserRouter as Router,
   Route,
   withRouter,
   Switch
 } from "react-router-dom";
+
 class TransactionTable extends Component {
   render() {
     let {
@@ -17,40 +19,45 @@ class TransactionTable extends Component {
       {
         title: "Sender Address",
         dataIndex: "senderAddress",
-        colSpan: 4
+        width: 25
       },
       {
         title: "Date",
-        dataIndex: "dateCreated"
+        dataIndex: "dateCreated",
+        width: 20
       },
       {
         title: "Recipient Address",
-        dataIndex: "to"
+        dataIndex: "to",
+        width: 25
       },
       {
         title: "Amount",
-        dataIndex: "trueAmount"
+        dataIndex: "trueAmount",
+        width: 15
       },
       {
         title: "Transaction Fee",
         dataIndex: "transactionFee",
-        colSpan: 4
+        width: 15
       },
 
       {
         title: "Detail",
         dataIndex: "data",
-        colSpan: 4
+        width: 20
       }
     ];
 
     return (
       <Layout width="100%">
         <Table
+          className="fixed"
           columns={columns}
+          bordered
           dataSource={listOfTransaction}
-          style={{ height: "100%", textAlign: "center" }}
-          scroll={{ x: 600, y: 300 }}
+          style={{ height: "100%", width: "auto" }}
+          scroll={{ x: "150%", y: 300 }}
         />
       </Layout>
     );

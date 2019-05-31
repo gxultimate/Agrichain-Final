@@ -47,3 +47,42 @@
 .modalReg {
   overflow-y: initial !important;
 }
+
+.bg {
+  /* background: -webkit-linear-gradient(
+    left,
+    #bfd255 0%,
+    #bfd255 10%,
+    #bfd255 10%,
+    #bfd255 21%,
+    #bfd255 21%,
+    #72aa00 47%,
+    #80af28 84%,
+    #80af28 84%,
+    #9ecb2d 100%
+  ); */
+  background: url("./bg.jpg"),
+    linear-gradient(
+      to right,
+      #bfd255 5%,
+      #bfd255 5%,
+      #bfd255 8%,
+      #bfd255 10%,
+      #bfd255 10%,
+      #80af28 18%,
+      #80af28 34%,
+      #72aa00 43%,
+      #72aa00 44%,
+      #72aa00 55%,
+      #80af28 86%,
+      #bfd255 93%
+    );
+
+  background-size: cover;
+}
+
+table .fixed {
+  table-layout: fixed;
+  width: 90px;
+  word-break: break-all;
+}

@@ -13,12 +13,13 @@ import {
   Form,
   Upload,
   DatePicker,
-  Cascader
+  Cascader,
+  message
 } from "antd";
 import { inject, observer } from "mobx-react";
 import { withRouter, BrowserRouter } from "react-router-dom";
 import axios from "axios";
-import InputAgricultural from "./inputAgricultural";
+
 const FormItem = Form.Item;
 
 class AgriculturalLoanModal extends Component {
@@ -43,13 +44,59 @@ class AgriculturalLoanModal extends Component {
   };
 
   fileUploadHander = () => {
+    let {
+      userStore: { currentLoan, cookies }
+    } = this.props;
     const fd = new FormData();
     fd.append("file", this.state.selectedFile);
     fd.append("filename", this.state.selectedFile.name);
-    console.log(this.state.selectedFile);
+    // const name = this.state.selectedFile.name;
+
+    // console.log("name", this.state.selectedFile.name);
+
     axios.post(" http://127.0.0.1:5000/uploadFiles", fd).then(resp => {
-      console.log("resp", resp.data);
+      console.log("resp", resp.data.name.name);
+      currentLoan.setProperty("uploadID", resp.data.name);
     });
+  };
+
+  handleMessage = () => {
+    message.success("Loan Request Successful");
+  };
+
+  // setAmountToLoan = () => {
+  //   let {
+  //     userStore: { currentLoan, cookie }
+  //   } = this.props;
+
+  //   const { form } = this.props;
+
+  //   let newValue = 0;
+  //   // if (value == "") {
+  //   //   form.setFieldsValue({
+  //   //     amountOfLoan: currentLoan["amountOfLoan"]
+  //   //   });
+  //   //   // currentLoan.setProperty("amountOfLoan", newValue);
+  //   // }
+  //   newValue =
+  //     parseInt(currentLoan["amountOfLoan"]) -
+  //     parseInt(currentLoan["amountToPay"]);
+  //   console.log(currentLoan["amountOfLoan"]);
+  //   // console.log(currentLoan["amountOfLoan"]);
+  //   // form.setFieldsValue({
+  //   //   amountOfLoan: newValue
+  //   // });
+  //   currentLoan.setProperty("amountOfLoan", newValue);
+  // };
+
+  handleSubmit = () => {
+    const success = () => {
+      message
+        .loading("Sending Loan Request...", 2.5)
+        .then(() => message.success("Loan Submitted Successfully!", 2.5));
+    };
+
+    setTimeout(success, 2000);
   };
 
   setInitialValues = () => {
@@ -126,8 +173,14 @@ class AgriculturalLoanModal extends Component {
     let {
       userStore: { currentLoan, cookies }
     } = this.props;
-    console.log(value);
+
+    const id =
+      Math.floor(100000000 + Math.random() * 900000000) +
+      Math.floor(100000 + Math.random() * 90000);
+    console.log(id);
     currentLoan.setProperty("termOfLoan", value);
+    currentLoan.setProperty("loanRequestID", id);
+    currentLoan.setProperty("typeOfLoan", "Agricultural Loan");
   };
 
   setServiceFee = amount => {
@@ -140,16 +193,24 @@ class AgriculturalLoanModal extends Component {
     form.setFieldsValue({
       serviceFee: serviceFee
     });
+    currentLoan.setProperty("interest", "2%");
+
+    currentLoan.setProperty("serviceFee", serviceFee);
 
     console.log(amount);
   };
 
   setPenaltyFee = amount => {
+    let {
+      userStore: { currentLoan, cookies }
+    } = this.props;
+
     const { form } = this.props;
     const penaltyFee = amount * 0.05;
     form.setFieldsValue({
       penalty: penaltyFee
     });
+    currentLoan.setProperty("penaltyFee", penaltyFee);
   };
 
   render() {
@@ -175,12 +236,13 @@ class AgriculturalLoanModal extends Component {
           const fd = new FormData();
           fd.append("file", file.originFileObj);
           fd.append("filename", file.name);
-
+          currentUser.setProperty("uploadID", file.name);
           axios.post(" http://127.0.0.1:3001/uploadFiles", fd).then(resp => {
             console.log("resp", resp.data);
+            currentLoan.setProperty("uploadID", resp.data.name);
           });
-          console.log("current", currentLoan.uploadID);
-          console.log("file", file.originFileObj);
+          // console.log("current", currentLoan.uploadID);
+          // console.log("file", file.originFileObj);
         }
       }
     };
@@ -202,7 +264,6 @@ class AgriculturalLoanModal extends Component {
       >
         <Form className="regForm ::-webkit-scrollbar ">
           <FormItem>
-            <span style={{ float: "left", fontSize: "2.5vh" }}>Borrower</span>
             <Row gutter={24} style={{ marginTop: "6.5vh" }}>
               <Col span={8} key={0}>
                 <FormItem label="Cooperative ID">
@@ -510,7 +571,6 @@ class AgriculturalLoanModal extends Component {
               </Col>
             </Row>
 
-            <span style={{ float: "left", fontSize: "2.5vh" }}>Co-Maker</span>
             <Row gutter={24} style={{ marginTop: "6.5vh" }}>
               <Col span={8} key={25}>
                 <FormItem label="Co-Maker Cooperative ID">
@@ -762,10 +822,10 @@ class AgriculturalLoanModal extends Component {
                   })(
                     <Input
                       prefix={<Icon type="credit-card" />}
-                      onChange={coMakercoMakeravenueMonthlyTakeHomePay =>
+                      onChange={coMakeravenueMonthlyTakeHomePay =>
                         currentLoan.setProperty(
-                          "coMakercoMakeravenueMonthlyTakeHomePay",
-                          coMakercoMakeravenueMonthlyTakeHomePay.target.value
+                          "coMakeravenueMonthlyTakeHomePay",
+                          coMakeravenueMonthlyTakeHomePay.target.value
                         )
                       }
                     />
@@ -830,7 +890,6 @@ class AgriculturalLoanModal extends Component {
           </FormItem>
           <FormItem style={{ margin: "auto", textAlign: "center" }}>
             <FormItem>
-              <span style={{ float: "left", fontSize: "2.5vh" }}>Loan </span>
               <Row gutter={24} style={{ marginTop: "6.5vh" }}>
                 <Col span={8} key={26}>
                   <FormItem label="Type of Loan">
@@ -854,7 +913,7 @@ class AgriculturalLoanModal extends Component {
                   </FormItem>
                 </Col>
 
-                <Col span={8} key={27}>
+                <Col span={8} key={36}>
                   <FormItem label="Amount to Loan">
                     {getFieldDecorator("amountOfLoan", {
                       rules: [
@@ -871,6 +930,12 @@ class AgriculturalLoanModal extends Component {
                             "amountOfLoan",
                             amountOfLoan.target.value
                           );
+                          currentLoan.setProperty(
+                            "initialAmountOfLoan",
+                            amountOfLoan.target.value
+                          );
+
+                          // cookies.set("amount", amountOfLoan.target.value);
                           this.setServiceFee(amountOfLoan.target.value);
                           this.setPenaltyFee(amountOfLoan.target.value);
                         }}
@@ -878,6 +943,7 @@ class AgriculturalLoanModal extends Component {
                     )}
                   </FormItem>
                 </Col>
+
                 <Col span={8} key={28}>
                   <FormItem label="Date Requested">
                     {getFieldDecorator("dateRequested", {
@@ -887,7 +953,13 @@ class AgriculturalLoanModal extends Component {
                           message: "please fill up date requested"
                         }
                       ]
-                    })(<DatePicker />)}
+                    })(
+                      <DatePicker
+                        onChange={date => {
+                          currentLoan.setProperty("dateRequested", date);
+                        }}
+                      />
+                    )}
                   </FormItem>
                 </Col>
                 <Col span={8} key={30}>
@@ -900,14 +972,6 @@ class AgriculturalLoanModal extends Component {
                         }
                       ]
                     })(
-                      // <Input
-                      //   onChange={termOfLoan =>
-                      //     currentLoan.setProperty(
-                      //       "termOfLoan",
-                      //       termOfLoan.target.value
-                      //     )
-                      //   }
-                      // />
                       <Cascader
                         options={termLoan}
                         onChange={this.getOnchange}
@@ -982,6 +1046,34 @@ class AgriculturalLoanModal extends Component {
                     )}
                   </FormItem>
                 </Col>
+                <Col span={8} key={27}>
+                  <FormItem label="Down Payment">
+                    {getFieldDecorator("amountToPay", {
+                      rules: [
+                        {
+                          required: true,
+                          message: "please fill up amount to pay"
+                        }
+                      ]
+                    })(
+                      <Input
+                        prefix={<Icon type="credit-card" />}
+                        onChange={amountToPay => {
+                          currentLoan.setProperty(
+                            "amountToPay",
+                            amountToPay.target.value
+                          );
+
+                          // this.setAmountToLoan();
+                        }}
+                        // onKeyUp={amountToPay => {
+                        //   this.setAmountToLoan(amountToPay.target.value);
+                        // }}
+                        // ok
+                      />
+                    )}
+                  </FormItem>
+                </Col>
               </Row>
             </FormItem>
             <Card style={{ width: "50%", margin: "auto" }}>
@@ -1016,6 +1108,8 @@ class AgriculturalLoanModal extends Component {
                     // uploadFiles();
                     // this.fileSelectedHander;
                     sendLoanRequest();
+                    this.handleSubmit();
+                    // this.setAmountToLoan();
                   }}
                 >
                   Submit

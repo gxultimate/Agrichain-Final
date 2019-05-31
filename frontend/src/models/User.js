@@ -28,6 +28,7 @@ class User extends Model {
       avenueMonthlyTakeHomePay: "",
       totalMonthlyStatutoryDeductions: "",
       totalMonthlyNonStatutoryDeductions: "",
+      userRole: "",
       response: ""
     };
     super({ ...defaults, ...props });
@@ -57,7 +58,8 @@ decorate(User, {
   totalMonthlyStatutoryDeductions: observable,
   totalMonthlyNonStatutoryDeductions: observable,
   response: observable,
-  reset: action
+  reset: action,
+  userRole: observable
 });
 
 export default User;

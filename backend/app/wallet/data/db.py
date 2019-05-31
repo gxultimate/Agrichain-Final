@@ -8,7 +8,7 @@ from flask import jsonify
 class User:
 
     # adding user
-    def addUser(self, cooperativeID, walletAddr, _privateKey, _publicKey, _name, _coop, _address, _contact, _username, _pass, _rpass,  _contactNoOffice, _residence, _occupation,  _membershipType, _placeOfAssignment, _position, _monthlyBasicSalary, _avenueMonthlyTakeHomePay,  _totalMonthlyStatutoryDeductions, _totalMonthlyNonStatutoryDeductions,):
+    def addUser(self, cooperativeID, walletAddr, _privateKey, _publicKey, _name, _coop, _address, _contact, _username, _pass, _rpass,  _contactNoOffice, _residence, _occupation,  _membershipType, _placeOfAssignment, _position, _monthlyBasicSalary, _avenueMonthlyTakeHomePay,  _totalMonthlyStatutoryDeductions, _totalMonthlyNonStatutoryDeductions, userRole):
 
         db = tasho.Database.open('./data/walletUser')
         tbl_user = db.table['walletUser']
@@ -28,7 +28,8 @@ class User:
                                             'membershipType': _membershipType,
                                             'occupation': _occupation,
                                             'placeOfAssignment': _placeOfAssignment, 'position': _position, 'monthlyBasicSalary': _monthlyBasicSalary, 'avenueMonthlyTakeHomePay': _avenueMonthlyTakeHomePay,  'totalMonthlyStatutoryDeductions': _totalMonthlyStatutoryDeductions, 'totalMonthlyNonStatutoryDeductions': _totalMonthlyNonStatutoryDeductions,
-                                            'cooperativeID': cooperativeID
+                                            'cooperativeID': cooperativeID,
+                                            'userRole': userRole
                                             })
 
             return jsonify({'status': True})
@@ -45,6 +46,7 @@ class User:
         try:
 
             if search['userName'] is not None and search['password'] is not None:
+
                 userData = search.dict
                 return jsonify(userData)
             else:

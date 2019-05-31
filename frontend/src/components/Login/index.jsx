@@ -1,4 +1,3 @@
-import "./index.css";
 import React, { Component } from "react";
 
 import { inject, observer } from "mobx-react";
@@ -15,14 +14,14 @@ import {
   message
 } from "antd";
 
-//
+import "./style.css";
 import WrapLogin from "./login";
 
 class Login extends Component {
   render() {
     return (
-      <Layout className="bg-light">
-        <div>
+      <Layout>
+        <div className="bg" style={{ height: "100%", width: "100%" }}>
           <WrapLogin />
         </div>
       </Layout>

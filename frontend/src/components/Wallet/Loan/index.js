@@ -7,52 +7,58 @@ import Headerbar from "./Header";
 const { Content } = Layout;
 class LoanPage extends Component {
   state = {};
+
+  componentDidMount() {
+    let {
+      userStore: { getAllLoanRequest, listOfAllLoan }
+    } = this.props;
+    setInterval(() => {
+      getAllLoanRequest();
+      console.log("list", listOfAllLoan);
+    }, 3000);
+  }
+
   render() {
+    let {
+      userStore: { getallloanrequests, listOfAllLoan }
+    } = this.props;
+
     const columns = [
       {
         title: "Loan Requests ID",
-        dataIndex: "loanRequestID",
-        width: "10%"
+        dataIndex: "loanRequestID"
       },
       {
         title: "Type of Loan",
-        dataIndex: "typeOfLoan",
-        width: "10%"
+        dataIndex: "borrowerParsedTypeOfLoan"
       },
       {
         title: "senderWalletAddress",
-        dataIndex: "senderWalletAddress",
-        width: "10%"
+        dataIndex: "borrowerSenderWallerAddress"
       },
       {
         title: "Loan Applicant Name",
-        dataIndex: "loanApplicantName",
-        width: "10%"
+        dataIndex: "borrowerFullname"
       },
       {
         title: "Amount",
-        dataIndex: "amount",
-        width: "10%"
+        dataIndex: "borrowerParsedInitialAmount"
       },
       {
         title: "Interest (%)",
-        dataIndex: "interest",
-        width: "5%"
+        dataIndex: "borrowerParsedInterest"
       },
       {
         title: "Term Of Loan",
-        dataIndex: "termOfLoan",
-        width: "5%"
+        dataIndex: "borrowerParsedTermOfLoan"
       },
       {
         title: "Penalty",
-        dataIndex: "penalty",
-        width: "15%"
+        dataIndex: "borrowerParsedPenalty"
       },
       {
         title: "Service Fee",
-        dataIndex: "serviceFee",
-        width: "15%"
+        dataIndex: "borrowerParsedServiceFee1"
       },
       {
         title: "Action",
@@ -62,14 +68,14 @@ class LoanPage extends Component {
           <Popconfirm
             title="Approve Loan Request?"
             trigger="click"
-            onConfirm={this.toggleAddModal.bind(this)}
-            onClick={() => {
-              this.assignData(data);
-            }}
+            // // onConfirm={this.toggleAddModal.bind(this)}
+            // onClick={() => {
+            //   this.assignData(data);
+            // }}
 
             // onConfirm={console.log("assign", assignJob)}
           >
-            <a href="javascript:;">Assign</a>
+            <a href="javascript:;">Approve</a>
           </Popconfirm>
         )
       }
@@ -97,7 +103,7 @@ class LoanPage extends Component {
                 marginTop: "10vh"
               }}
               columns={columns}
-              // dataSource={listOfAllPendingJob}
+              dataSource={listOfAllLoan}
               rowKey="jobID"
             />
           </Content>

@@ -32,6 +32,16 @@ class WalletForm extends Component {
     value: ""
   };
 
+  componentDidMount() {
+    let {
+      userStore: { getBalance, getTransaction }
+    } = this.props;
+    setInterval(() => {
+      getTransaction();
+      getBalance();
+    }, 3000);
+  }
+
   toggleQrCode = () => {
     this.setState({
       visible: !this.state.visible
@@ -53,6 +63,14 @@ class WalletForm extends Component {
     let {
       userStore: { currentUser, thing, cookies, balance }
     } = this.props;
+
+    let newBalance = 0;
+
+    if (balance === undefined || balance === null) {
+      newBalance = 0;
+    } else {
+      newBalance = balance;
+    }
 
     const cookieData = cookies.get("userData");
     const walletAddr = cookieData["walletAddress"];
@@ -128,7 +146,7 @@ class WalletForm extends Component {
                 }}
               >
                 {" "}
-                {balance} AGC{" "}
+                {newBalance} AGC{" "}
               </Card>
               <ButtonGroup size="large" style={{ marginTop: "4vh" }}>
                 <Button
@@ -148,7 +166,7 @@ class WalletForm extends Component {
               </ButtonGroup>
             </Card>
           </Col>
-          <Col span={16} style={{ marginLeft: "5vh", height: "50vh" }}>
+          <Col span={16} style={{ marginLeft: "2vh", height: "50vh" }}>
             <Tabs defaultActiveKey="1" onChange={callback}>
               <TabPane tab="Transaction History" key="1">
                 <TransactionTable />

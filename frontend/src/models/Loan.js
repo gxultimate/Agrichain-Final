@@ -9,7 +9,8 @@ class Loan extends Model {
       loanRequestID: "",
       typeOfLoan: "",
       amountOfLoan: "",
-
+      initialAmountOfLoan: "",
+      borrowerLoanBalance: 0,
       coMakerName: "",
       coMakercooperativeID: "",
       coMakermembershipType: "",
@@ -28,9 +29,12 @@ class Loan extends Model {
       dateRequested: "",
       interest: "",
       termOfLoan: "",
-      penalty: "",
+      penaltyFee: "",
       serviceFee: "",
-      uploadID: ""
+      uploadID: "",
+      amountToPay: "",
+      status: "Pending",
+      data: ""
     };
     super({ ...defaults, ...props });
   }
@@ -56,10 +60,15 @@ decorate(Loan, {
   cpNumber: observable,
   interest: observable,
   termOfLoan: observable,
-  penalty: observable,
+  penaltyFee: observable,
   serviceFee: observable,
   uploadID: observable,
-  dateRequested: observable
+  dateRequested: observable,
+  status: observable,
+  borrowerLoanBalance: observable,
+  amountToPay: observable,
+  initialAmountOfLoan: observable,
+  data: observable
 });
 
 export default Loan;

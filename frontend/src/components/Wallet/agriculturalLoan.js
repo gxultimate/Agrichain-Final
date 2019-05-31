@@ -19,7 +19,7 @@ import {
 } from "react-router-dom";
 
 import WrapAgriculturalLoanModal from "./modal/agriculturalLoanModal";
-
+import LoanTable from "./loanTable";
 const { Content } = Layout;
 class AgriculturalLoan extends Component {
   state = {
@@ -77,14 +77,14 @@ class AgriculturalLoan extends Component {
                   }}
                 >
                   <p>
-                    Agricultural Loan is intended for to help farmers/vendors
-                    with the finances , this is a short-term loan that can be
-                    used to purchased seeds,fertilizers, machineeries , land
-                    preparations and others{" "}
+                    Agricultural Loan is intended to help farmers/vendors with
+                    the finances , this is a short-term loan that can be used to
+                    purchased seeds,fertilizers, machineeries , land
+                    preparations and others.{" "}
                   </p>
                 </Card>
                 <Card>
-                  <Table />
+                  <LoanTable />
                 </Card>
               </Content>
             </Col>

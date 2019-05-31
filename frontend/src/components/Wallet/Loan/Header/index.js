@@ -15,7 +15,7 @@ class Headerbar extends Component {
 
   render() {
     let {
-      userStore: { currentUser, cookies, thing }
+      userStore: { currentUser, cookies, thing, list }
     } = this.props;
 
     if (this.state.logout == true) {
@@ -26,7 +26,7 @@ class Headerbar extends Component {
       <Menu
         theme="dark"
         onClick={this.handleClick}
-        style={{ height: "5.5vh " }}
+        style={{ height: "6vh " }}
         mode="horizontal"
       >
         <Menu.Item style={{ float: "left" }} key="1">

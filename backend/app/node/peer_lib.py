@@ -8,7 +8,7 @@ import json
 
 def getTimeStamp():
     currentDT = datetime.datetime.now()
-    return currentDT.strftime("%H:%M:%S")
+    return currentDT.strftime("%H:%M:00")
 
 
 def getDateStamp():
@@ -37,6 +37,7 @@ class Peer:
                         peer['ip'], peer['port'], LoggingNamespace, wait_for_connection=False)
                     print(f"{getTimeStamp()} >> Connected Successfully!")
                     self.addServer(server)
+
                     self.sendNodeDetails(server, ip, port, branch)
                     # sleep(1)
                 except:
@@ -58,7 +59,7 @@ class Peer:
 
 # reciprocate connection with other nodes
     def reciprocateConnection(self, ip, port, branch):
-        sleep(2)
+        sleep(1)
         try:
 
             server = socks_c(ip, port, LoggingNamespace,
