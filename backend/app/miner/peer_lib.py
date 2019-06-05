@@ -37,6 +37,7 @@ class Peer:
                         peer['ip'], peer['port'], LoggingNamespace, wait_for_connection=False)
                     print(f"{getTimeStamp()} >> Connected Successfully!")
                     self.addServer(server)
+
                     self.sendNodeDetails(server, ip, port, branch)
                     # sleep(1)
                 except:
@@ -58,7 +59,7 @@ class Peer:
 
 # reciprocate connection with other nodes
     def reciprocateConnection(self, ip, port, branch):
-        sleep(1)
+        sleep(3)
         try:
            
             server = socks_c(ip, port, LoggingNamespace,
@@ -66,7 +67,7 @@ class Peer:
             print(f"{getTimeStamp()} >> Reciprocal Connection Successful!")
             self.addServer(server)
       
-        except Exception as e: 
+        except Exception as e:
 
           
             print(f"{getTimeStamp()} >> Can't connect to {branch}")

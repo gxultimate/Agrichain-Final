@@ -1,0 +1,8 @@
+[
+    { "ip": "127.0.0.1", "port": "4000", "branch": "Sta. Barbara Miner" },
+    { "ip": "127.0.0.1", "port": "4001", "branch": "Jaro Miner" },
+    { "ip": "127.0.0.1", "port": "4002", "branch": "Pototan Miner" },
+    { "ip": "127.0.0.1", "port": "4003", "branch": "New Lucena Miner" },
+    { "ip": "127.0.0.1", "port": "4004", "branch": "Alimodian Miner" }
+  ]
+  

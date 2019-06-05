@@ -13,12 +13,12 @@ from flask_cors import CORS, cross_origin
 from werkzeug.debug import DebuggedApplication
 import asyncio
 from blueprints.db import Transaction
-import hashlib
+
 from werkzeug.utils import secure_filename
 import tempfile
 from redis import Redis
 from rq import Queue
-import ast
+
 
 
 UPLOAD_FOLDER = './data'
@@ -45,6 +45,7 @@ def startServer(ip, port, branch):
     sleep(1)
     print(f"{getTimeStamp()} >> Starting Server...")
     print(f"{getTimeStamp()} >> Server started in {branch}")
+    sleep(2)
     print(f"{getTimeStamp()} >> Waiting for Connection ...")
     peer.connectToInitialPeers(ip, port, branch)
     miner.connectToInitialMiner(ip, port , branch)
@@ -61,81 +62,55 @@ def disconnect():
     print(f'{getTimeStamp()}>> A Node has been disconnected')
 
 
-@socketio.on_error
-def on_my_event(e):
-    print(e)
+@socketio.on("error")
+def on_my_event(data):
+    raise RuntimeError()
 
 
 @socketio.on('message')
 def sendMessage(msg):
-    print("msg!", msg)
+
+
     if '%NODE%' in msg: 
-        sleep(15)
+        sleep(2)
         data = msg.replace('%NODE%,', '').split(',')
-
         peer.reciprocateConnection(data[0], int(data[1]), data[2])
-
-    elif "%MINER%" in msg:
-        sleep(15)
-
-        data = msg.replace("%MINER%," , "").split(",")
-     
-
-        miner.reciprocateConnection(data[0], int(data[1]) , str(data[2]))
-
-
-
     else:
         sleep(3)
         print(f'\n {getTimeStamp()} >> {msg}')
-        if msg != "Hello Im a miner!":
-            transaction.addNewPendingTransaction(msg['msg'])
-            transaction.addNewWalletBalance(msg['wallet'])
-        else:
-            print("Miner!!!")
+        transaction.addNewPendingTransaction(msg['msg'])
+        transaction.addNewWalletBalance(msg['wallet'])
 
 
 def handleMessage():
     while True:
 
-        if len(miner.getServers()) > 0  or len(peer.getServers()) > 0:
+        if len(peer.getServers()) > 0:
             # sleep(1)
             message = transaction.getPendingTransaction()
-            
-
-            mining = transaction.getMiningJob()
-  
             wallet = transaction.getWalletBalance()
             msg = {'msg': message, 'wallet': wallet}
-
-            for server in miner.getServers():
-                sleep(2)
-                server.send(mining)
-
             for server in peer.getServers():
-                sleep(2)
+
                 server.send(msg)
 
 
+@socketio.on('mining')
 
-# @socketio.on('mine')
-
-# # def sendMiningJob(mine):
-# #     if "%MINER%" in mine:
-# #         sleep(15)
-# #         data = mine.replace("%MINER%," , "").split(",")
-# #         print("DATA",data)
-# #         miner.reciprocateConnection(data[0], int(data[1]) , str(data[2]))
-# #     else:
-# #         print(mine)
+def sendMiningJob(msg):
+    if "%MINER" in msg:
+        data = msg.replace("%MINER" , "").split(",")
+        miner.reciprocateConnection(data[0], int(data[1] , data[2]))
+    else:
+        print(msg)
         
         
-# def handleMining():
-#     while True:
-#         if len(miner.getServers()) > 0 :
-#             mine = transaction.getMiningJob()
-#             for server in miner.getServers():
-#                 server.send(mine)
+def handleMining():
+    while True:
+        if len(miner.getServers()) > 0 :
+            msg = transaction.getMiningJob()
+            for server in miner.getServers():
+                server.send(msg)
             
 
 
@@ -168,7 +143,6 @@ if __name__ == "__main__":
 
     # asyncio.run(messages())
     Thread(target=handleMessage).start()
-    # Thread(target=handleMining).start()
     
     # socketio.start_background_task(target=handleMessage)
     socketio.run(app, host=ip, port=port, debug=False)

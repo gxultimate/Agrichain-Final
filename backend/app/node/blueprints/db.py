@@ -6,6 +6,7 @@ from tinydb import TinyDB, Query
 import tempfile
 from io import StringIO
 import ast
+from hashlib import sha256
 from datetime import timedelta, datetime
 
 
@@ -131,15 +132,18 @@ class Transaction:
 
                 db.insert({'timeStamp': timeStamp,
                            'transaction': _transaction})
+                data2 = str("0")
+                startingHash = sha256(data2.encode('utf8')).hexdigest()
+                db3.insert({'index': 0 , 'previousHash':str(startingHash) , 'currentBlock': "" })
 
                 db2.write_back(receiverBalance)
 
                 return jsonify({'status': 'pending transaction'})
             else:
                 db2.insert(
-                    {'senderAddress': _senderAddress, 'balance': _balance, 'lastTransaction': timeStamp})
+                    {'senderAddress': _senderAddress, 'balance': _balance, 'timeStamp': timeStamp})
                 db2.insert(
-                    {'senderAddress': _recipientAddress, 'balance': _amount})
+                    {'senderAddress': _recipientAddress, 'balance': _amount ,  'timeStamp': timeStamp})
 
                 db.insert({'timeStamp': timeStamp,
                            'transaction': _transaction})
@@ -148,10 +152,14 @@ class Transaction:
         else:
 
             db2.insert({'senderAddress': _senderAddress,
-                        'balance': _balance, 'lastTransaction': timeStamp})
+                        'balance': _balance, 'timeStamp': timeStamp})
+            db2.insert(
+                    {'senderAddress': _recipientAddress, 'balance': _amount,  'timeStamp': timeStamp})
 
             db.insert({'timeStamp': timeStamp, 'transaction': _transaction})
             return jsonify({'status': 'invalid'})
+
+
 
     def getPendingTransaction(_self):
 
@@ -162,13 +170,60 @@ class Transaction:
         date = datetime.now()
         dateTime = date.strftime("%c")
         timeStamp = date.strptime(dateTime, "%a %b %d %H:%M:%S %Y")
-        endTime = timeStamp + timedelta(minutes=5)
+        currentTimeStamp = timeStamp + timedelta(minutes=5)
+        endTime = timeStamp + timedelta(minutes=10)
 
         transactions = Query()
-        currentPendingTransaction = db.search((transactions.timeStamp < str(
-            endTime)) and (transactions.timeStamp > str(timeStamp)))
+        currentPendingTransaction = db.search((transactions.timeStamp))
+        filteredTransaction = []
+        for pending in currentPendingTransaction:
+    
+            if date.strptime(pending['timeStamp'], "%a %b %d %H:%M:%S %Y") > timeStamp  :
+                filteredTransaction.append(pending)
+                return json.dumps(filteredTransaction)
+               
+            else:
+                return json.dumps(currentPendingTransaction)
 
-        return json.dumps(currentPendingTransaction)
+                    
+    def getMiningJob(_self):
+
+        new_port = newPort
+
+        db = TinyDB(f"./databaseTransaction/{new_port}pendingTransaction.db")
+        db2 = TinyDB(f"./databaseTransaction/{new_port}blockChain.db")
+        date = datetime.now()
+        dateTime = date.strftime("%c")
+        timeStamp = date.strptime(dateTime, "%a %b %d %H:%M:%S %Y")
+        currentTimeStamp = timeStamp + timedelta(minutes=5)
+        endTime = timeStamp + timedelta(minutes=10)
+
+        transactions = Query()
+        currentPendingTransaction = db.search((transactions.timeStamp))
+    
+        filteredTransaction = []
+        allBlock = db2.all()
+        currentBlock = allBlock[-1]
+        currentIndex  = currentBlock['index'] 
+        currentPreviousHash  = currentBlock['previousHash']
+
+        for pending in currentPendingTransaction:
+
+            if date.strptime(pending['timeStamp'], "%a %b %d %H:%M:%S %Y") > timeStamp  :
+                filteredTransaction.append(pending)
+                pendingTransaction =  sha256(str(filteredTransaction).encode("utf8")).hexdigest()
+                print(type(currentPreviousHash))
+                print(type(pendingTransaction))
+                miningJob = {"index":currentIndex , "previousHash": currentPreviousHash , "pendingTransaction": pendingTransaction}
+                return json.dumps(miningJob)
+                
+            else:
+                
+                pendingTransaction = sha256(str(currentPendingTransaction).encode("utf8")).hexdigest()
+                miningJob = {"index":currentIndex , "previousHash": currentPreviousHash , "pendingTransaction": pendingTransaction}
+                return json.dumps(miningJob)
+
+
 
     def getWalletBalance(_self):
 
@@ -176,14 +231,31 @@ class Transaction:
 
         db = TinyDB(f"./databaseTransaction/{new_port}walletBalance.db")
         transactions = Query()
-        return json.dumps(db.all())
+        date = datetime.now()
+        dateTime = date.strftime("%c")
+        timeStamp = date.strptime(dateTime, "%a %b %d %H:%M:%S %Y")
+        currentTimeStamp = timeStamp + timedelta(minutes=5)
+        endTime = timeStamp + timedelta(minutes=10)        
+        filteredBalance = []
+        currentBalance = db.search((transactions.timeStamp))
+
+        for pending in currentBalance:
+            if  date.strptime(pending['timeStamp'], "%a %b %d %H:%M:%S %Y") > timeStamp :
+                filteredBalance.append(pending)
+                # print("pending!" , filteredBalance , pending)
+                return json.dumps(filteredBalance)
+                
+            else:
+                # print("current!" , currentBalance)
+                return json.dumps(currentBalance)
+
 
     def addNewWalletBalance(_self, _newBalance):
         new_port = newPort
         date = datetime.now()
         timeStamp = date.strftime("%c")
         db = TinyDB(f"./databaseTransaction/{new_port}walletBalance.db")
-        db2 = TinyDB(f"./databaseTransaction/{new_port}tempWalletBalance.db")
+    
         transactions = Query()
         allBalance = db.all()
 
@@ -202,68 +274,33 @@ class Transaction:
         existingAddress = (set(_newAddresses) & set(_currentAddresses))
         strExistingAddress = str(existingAddress)
         strExisting = strExistingAddress[1:-1]
-        # print(allBalance ,'all'  , _newBalances , "new")
-
+    
         for balance in _newBalances:
-            #     print(balance , "bal",  allBalance,"all")
-            if balance in allBalance:
-                # print("balance ", balance['senderAddress'])
 
-                if balance['senderAddress'] == strExisting:
-                    print("ok")
-                else:
-                    print(balance['senderAddress'], strExisting)
-                #     search = db.search(
-                #         transactions.senderAddress == strExisting)
-                #     # search['balance']
+            if allBalance != []:    
+                for oldBalance in allBalance:
+
+                        balanceData = db.search(transactions.senderAddress == balance['senderAddress'])
+                        search = db.search(   
+                            transactions.senderAddress == balance['senderAddress'])
+                        if len(balance) > 0 and search != []:
+                            lastSearch = search[-1] 
+                        
+                            lastSearchDict = lastSearch['balance']
+                            lastSearch['balance'] = float(balance['balance'])
+                            db.write_back(search)
+                    
+                          
+                        else:
+                            print('newTrans on else')
+                            db.insert(balance)
+             
+             
             else:
-                print("balance else")
+                print('newTransaction')
                 db.insert(balance)
-
-        # newBal = str(_newBalance)
-        # newBalancer = ast.literal_eval(newBal)
-        # newBalances = newBal[1:-1]
-        # newBalance = ast.literal_eval(newBalances)
-        # db2 = TinyDB(f"./{new_port}tempWalletBalance.db")
-        # db2.insert(dict(newBalance))
-
-        # for addresses in newBalancer:
-        #     if 'senderAddress' in addresses:
-        #         newAddresses.append(addresses['senderAddress'])
-
-        # for currAddress in allBalance:
-        #     if 'senderAddress' in currAddress:
-        #         currAddresses.append(currAddress['senderAddress'])
-
-        # existingAddress = (set(currAddresses) & set(newAddresses))
-        # strExistingAddress = str(existingAddress)
-        # strExisting = strExistingAddress[1:-1]
-
-        # searchBalance = db2.search(
-        #     transactions.senderAddress == str(strExisting))
-        # print(db2.all(), "Hello")
-        # print(searchBalance, "search")
-        # print(newBalance , type(newBalance) , "ex")
-
-        # if (existingAddress) != [] or None:
-        #     if len(existingAddress) == 1:
-        #         existingNewAddress = db.search(
-        #             transactions.senderAddress == strExisting)
-        #         for newBalanceAddress in newBalance:
-        #             existing.append(
-        #                 f"{newBalanceAddress['senderAddress']} , {newBalanceAddress['balance']}")
-
-        #         searchBalance = db.search(
-        #             transactions.senderAddress == str(strExisting))
-
-        #         print(type(newBalance), newBalance, "temp")
-
-        #     else:
-        #         for x in existingAddress:
-        #             existing.append(db.search(transactions.senderAddress == x))
-        # else:
-        #     db.insert({timeStamp: newBalance})
-
+            
+    
     def addNewPendingTransaction(_self, _transactions):
 
         new_port = newPort
@@ -278,29 +315,24 @@ class Transaction:
         current = db.all()
 
         # transactions = _transactions[1:-1]
+        try:    
+            currentTransactions = ast.literal_eval(_transactions)
+            # newTransaction = dict(currentTransactions)
 
-        currentTransactions = ast.literal_eval(_transactions)
-        # newTransaction = dict(currentTransactions)
-
-        for transaction in currentTransactions:
-            # print(transaction , "transaction" , currentTransactions,"currentTransaction")
-            if transaction in currentPendingTransaction:
-                print("transaction =>", transaction)
-            else:
-                if transaction in current:
-                    print("transaction exists")
+            for transaction in currentTransactions:
+                # print(transaction , "transaction" , currentTransactions,"currentTransaction")
+                if transaction in currentPendingTransaction:
+                    print("transaction =>", transaction)
                 else:
-                    db.insert(transaction)
-                    print("currentransaction->", current)
+                    if transaction in current:
+                        print("transaction exists")
+                    else:
+                        db.insert(transaction)
+                        print("currentransaction->", current)
+        except:
+          print("error")
 
-    # def getValidatedTransactions(_self, _date):
-
-    #     db = TinyDB('./wallet.db')
-    #     date = getDateStamp()
-    #     transaction = Query()
-
-    #     trans = db.search(transaction.dateCreated == date)
-    #     return str(trans)
+   
 
     def getTransactions(_self, _senderWalletAddress):
         new_port = newPort
@@ -317,7 +349,7 @@ class Transaction:
         # print(newPort)
         new_port = newPort
 
-        db2 = TinyDB(f"./{new_port}walletBalance.db")
+        db2 = TinyDB(f"./databaseTransaction/{new_port}walletBalance.db")
 
         # db3 = TinyDB("./unspenTransactions.db")
         time = getTimeStamp()
@@ -331,9 +363,11 @@ class Transaction:
 
         # print(transactions)
         if userBalance != None:
+       
             if userBalance != "" or userBalance != []:
-
+           
                 try:
+                
                     userBalanceDict = userBalance[-1]
                     return jsonify({'balance': float(userBalanceDict['balance'])})
                 except:
