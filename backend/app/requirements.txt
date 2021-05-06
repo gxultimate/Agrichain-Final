@@ -1,7 +1,7 @@
 Werkzeug==0.15.4
 Flask_SocketIO==3.3.1
 tinydb==3.13.0
-Flask_Cors==3.0.7
+Flask_Cors==3.0.9
 pycoin==0.80
 requests==2.22.0
 unqlite==0.7.1
